@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+// navigation state
 final navProvider = StateProvider<int>((ref) {
   return 0;
 });
 
+// navigation drawer items
 final List<Map<dynamic, dynamic>> navItems = [
   {
     'title': const Text(
@@ -22,7 +24,7 @@ final List<Map<dynamic, dynamic>> navItems = [
       style: TextStyle(fontSize: 14),
     ),
     'icon': const Icon(
-      Icons.receipt_long_outlined,
+      Icons.assignment_outlined,
       size: 18,
     ),
   },

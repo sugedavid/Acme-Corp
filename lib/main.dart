@@ -2,6 +2,7 @@ import 'package:acme_corp/firebase_options.dart';
 import 'package:acme_corp/presentation/Home/HomePage.dart';
 import 'package:acme_corp/presentation/Login/LoginPage.dart';
 import 'package:acme_corp/presentation/Register/RegisterPage.dart';
+import 'package:acme_corp/presentation/shared/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,22 +27,19 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: appName,
-      theme: _buildTheme(Brightness.light),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: AppColors.primaryColor,
+          secondary: AppColors.primaryColorAccent,
+        ),
+        textTheme: GoogleFonts.nunitoTextTheme(),
+      ),
       home: const LoginPage(),
       routes: <String, WidgetBuilder>{
         '/login': (BuildContext context) => const LoginPage(),
         '/register': (BuildContext context) => const RegisterPage(),
         '/home': (BuildContext context) => const HomePage(),
       },
-    );
-  }
-
-  ThemeData _buildTheme(brightness) {
-    var baseTheme =
-        ThemeData(brightness: brightness, primarySwatch: Colors.blue);
-
-    return baseTheme.copyWith(
-      textTheme: GoogleFonts.nunitoTextTheme(baseTheme.textTheme),
     );
   }
 }

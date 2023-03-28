@@ -110,16 +110,9 @@ class _LoginFormState extends State<LoginForm> {
             ),
 
             // Log In
-            SizedBox(
-              width: double.infinity,
-              height: 45,
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  primary: Colors.white,
-                  backgroundColor: AppColors.primaryColor,
-                  shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(50))),
-                ),
+            Container(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton(
                 onPressed: () {
                   // validate form
                   if (_formKey.currentState!.validate()) {
@@ -127,25 +120,18 @@ class _LoginFormState extends State<LoginForm> {
                         _passwordTextController.text, _toggleVisibility);
                   }
                 },
-                child: (showLoader)
-                    ? Center(
-                        child: LoadingAnimationWidget.beat(
-                          color: Colors.white,
-                          size: 24,
-                        ),
+                style: ElevatedButton.styleFrom(
+                  primary: AppColors.primaryColorAccent,
+                ),
+                child: showLoader
+                    ? LoadingAnimationWidget.beat(
+                        color: Colors.white,
+                        size: 18,
                       )
-                    : Text(
-                        loginText.toUpperCase(),
-                        style: const TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
+                    : const Text('LOG IN'),
               ),
             ),
-
-            const SizedBox(
-              height: 30,
-            ),
+            const SizedBox(height: 30),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
