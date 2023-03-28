@@ -51,6 +51,8 @@ class DefaultFirebaseOptions {
     authDomain: 'acme-corp-b9cd5.firebaseapp.com',
     storageBucket: 'acme-corp-b9cd5.appspot.com',
     measurementId: 'G-9LQVJQK62V',
+    databaseURL:
+        'https://acme-corp-b9cd5-default-rtdb.europe-west1.firebasedatabase.app/',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -59,6 +61,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '862564551805',
     projectId: 'acme-corp-b9cd5',
     storageBucket: 'acme-corp-b9cd5.appspot.com',
+    databaseURL:
+        'https://acme-corp-b9cd5-default-rtdb.europe-west1.firebasedatabase.app/',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -67,8 +71,11 @@ class DefaultFirebaseOptions {
     messagingSenderId: '862564551805',
     projectId: 'acme-corp-b9cd5',
     storageBucket: 'acme-corp-b9cd5.appspot.com',
-    iosClientId: '862564551805-3b0hptckvq1pi7p3ntipg2r60248ih53.apps.googleusercontent.com',
+    iosClientId:
+        '862564551805-3b0hptckvq1pi7p3ntipg2r60248ih53.apps.googleusercontent.com',
     iosBundleId: 'com.example.acmeCorp',
+    databaseURL:
+        'https://acme-corp-b9cd5-default-rtdb.europe-west1.firebasedatabase.app/',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -77,7 +84,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '862564551805',
     projectId: 'acme-corp-b9cd5',
     storageBucket: 'acme-corp-b9cd5.appspot.com',
-    iosClientId: '862564551805-3b0hptckvq1pi7p3ntipg2r60248ih53.apps.googleusercontent.com',
+    iosClientId:
+        '862564551805-3b0hptckvq1pi7p3ntipg2r60248ih53.apps.googleusercontent.com',
     iosBundleId: 'com.example.acmeCorp',
+    databaseURL:
+        'https://acme-corp-b9cd5-default-rtdb.europe-west1.firebasedatabase.app/',
   );
 }
