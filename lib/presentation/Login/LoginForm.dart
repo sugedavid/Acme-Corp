@@ -1,60 +1,35 @@
-import 'dart:async';
-
 import 'package:acme_corp/core/services.dart';
 import 'package:acme_corp/domain/strings.dart';
 import 'package:acme_corp/presentation/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class RegisterForm extends StatefulWidget {
-  const RegisterForm({
+class LoginForm extends StatefulWidget {
+  const LoginForm({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<RegisterForm> createState() => _RegisterFormState();
+  State<LoginForm> createState() => _LoginFormState();
 }
 
-class _RegisterFormState extends State<RegisterForm> {
+class _LoginFormState extends State<LoginForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
   bool showLoader = false;
-  late Timer _timer;
 
   @override
   void dispose() {
-    _timer.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    int _start = 2;
-
-    void startTimer() {
-      showLoader = true;
-      const oneSec = Duration(seconds: 1);
-
-      _timer = Timer.periodic(
-        oneSec,
-        (Timer timer) {
-          if (_start == 0) {
-            showLoader = false;
-            setState(() {
-              timer.cancel();
-            });
-            // Navigator.pushReplacement(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => const HomePage()),
-            // );
-          } else {
-            setState(() {
-              _start--;
-            });
-          }
-        },
-      );
+    void _toggleVisibility() {
+      setState(() {
+        showLoader = !showLoader;
+      });
     }
 
     return SingleChildScrollView(
@@ -121,7 +96,7 @@ class _RegisterFormState extends State<RegisterForm> {
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Email is invalid';
+                  return 'Password is invalid';
                 } else if (value.length < 6) {
                   return 'Password must be at least six characters';
                 } else {
@@ -148,12 +123,11 @@ class _RegisterFormState extends State<RegisterForm> {
                 onPressed: () {
                   // validate form
                   if (_formKey.currentState!.validate()) {
-                    setState(() {});
-                    createUserAccount(context, _emailTextController.text,
-                        _passwordTextController.text, showLoader);
+                    loginUser(context, _emailTextController.text,
+                        _passwordTextController.text, _toggleVisibility);
                   }
                 },
-                child: (showLoader == true)
+                child: (showLoader)
                     ? Center(
                         child: LoadingAnimationWidget.beat(
                           color: Colors.white,
@@ -173,16 +147,36 @@ class _RegisterFormState extends State<RegisterForm> {
               height: 30,
             ),
 
-            // Forgot Password
-            const Center(
-              child: Text(
-                forgotPasswordText,
-                style: TextStyle(
-                  color: AppColors.primaryColor,
-                  fontSize: 14,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Register
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/register');
+                  },
+                  child: const Text(
+                    'Register account',
+                    style: TextStyle(
+                      color: AppColors.primaryColor,
+                      fontSize: 14,
+                    ),
+                  ),
                 ),
-              ),
-            ),
+
+                // Forgot Password
+                TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    'Forgot password',
+                    style: TextStyle(
+                      color: AppColors.primaryColor,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),

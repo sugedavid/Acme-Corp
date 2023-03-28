@@ -1,25 +1,30 @@
-import 'dart:async';
-
 import 'package:acme_corp/core/services.dart';
 import 'package:acme_corp/domain/strings.dart';
 import 'package:acme_corp/presentation/shared/colors.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({
+class RegisterForm extends StatefulWidget {
+  const RegisterForm({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<RegisterForm> createState() => _RegisterFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _RegisterFormState extends State<RegisterForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _nameTextController = TextEditingController();
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
+  String _userType = 'Customer';
+  // List of items in our dropdown menu
+  var items = [
+    'Customer',
+    'Agent',
+  ];
+
   bool showLoader = false;
 
   @override
@@ -46,7 +51,7 @@ class _LoginFormState extends State<LoginForm> {
               height: 15,
             ),
             const Text(
-              loginTitle,
+              'Welcome to Acme Corp',
               style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
@@ -57,10 +62,52 @@ class _LoginFormState extends State<LoginForm> {
               height: 10,
             ),
             const Text(
-              loginBody,
+              'Please fill in the details below to register.',
               style: TextStyle(
                 fontSize: 16,
               ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+
+            // name
+            TextFormField(
+              controller: _nameTextController,
+              keyboardType: TextInputType.name,
+              decoration: const InputDecoration(
+                labelText: 'First and last name',
+                labelStyle: TextStyle(
+                  fontSize: 15,
+                ),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Name is invalid';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+
+            // user type
+            DropdownButton(
+              isExpanded: true,
+              value: _userType,
+              icon: const Icon(Icons.keyboard_arrow_down),
+              items: items.map((String items) {
+                return DropdownMenuItem(
+                  value: items,
+                  child: Text(items),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  _userType = newValue!;
+                });
+              },
             ),
             const SizedBox(
               height: 20,
@@ -99,7 +146,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Email is invalid';
+                  return 'Password is invalid';
                 } else if (value.length < 6) {
                   return 'Password must be at least six characters';
                 } else {
@@ -112,7 +159,7 @@ class _LoginFormState extends State<LoginForm> {
               height: 40,
             ),
 
-            // Log In
+            // Register
             SizedBox(
               width: double.infinity,
               height: 45,
@@ -126,9 +173,13 @@ class _LoginFormState extends State<LoginForm> {
                 onPressed: () {
                   // validate form
                   if (_formKey.currentState!.validate()) {
-                    // _toggleVisibility();
-                    loginUser(context, _emailTextController.text,
-                        _passwordTextController.text, _toggleVisibility);
+                    createUserAccount(
+                        context,
+                        _nameTextController.text,
+                        _userType,
+                        _emailTextController.text,
+                        _passwordTextController.text,
+                        _toggleVisibility);
                   }
                 },
                 child: (showLoader)
@@ -138,9 +189,9 @@ class _LoginFormState extends State<LoginForm> {
                           size: 24,
                         ),
                       )
-                    : Text(
-                        loginText.toUpperCase(),
-                        style: const TextStyle(
+                    : const Text(
+                        'REGISTER',
+                        style: TextStyle(
                           fontSize: 14,
                         ),
                       ),
@@ -151,16 +202,24 @@ class _LoginFormState extends State<LoginForm> {
               height: 30,
             ),
 
-            // Forgot Password
-            const Center(
-              child: Text(
-                forgotPasswordText,
-                style: TextStyle(
-                  color: AppColors.primaryColor,
-                  fontSize: 14,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Log in
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text(
+                    'Log in',
+                    style: TextStyle(
+                      color: AppColors.primaryColor,
+                      fontSize: 14,
+                    ),
+                  ),
                 ),
-              ),
-            ),
+              ],
+            )
           ],
         ),
       ),

@@ -1,28 +1,18 @@
-import 'package:acme_corp/domain/strings.dart';
+import 'package:acme_corp/presentation/Register/RegisterForm.dart';
 import 'package:acme_corp/presentation/shared/colors.dart';
-import 'package:acme_corp/presentation/shared/components/Login/LoginForm.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage();
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  State<RegisterPage> createState() => RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user == null) {
-        print('User is currently signed out!');
-      } else {
-        print('User is signed in!');
-      }
-    });
 
     return Scaffold(
       appBar: AppBar(
@@ -32,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text(
-          loginText,
+          'Register',
           style: TextStyle(
             color: Colors.white,
             fontSize: 16,
@@ -50,10 +40,10 @@ class _LoginPageState extends State<LoginPage> {
                       child: Card(
                         child: Padding(
                           padding: EdgeInsets.all(38.0),
-                          child: LoginForm(),
+                          child: RegisterForm(),
                         ),
                       )))
-              : const LoginForm(),
+              : const RegisterForm(),
         ),
       ),
     );

@@ -1,17 +1,49 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
+// set user info to db
+Future<void> saveUserInfo(
+    context, userId, name, userType, email, toggleVisibility) async {
+  DatabaseReference ref = FirebaseDatabase.instance.ref('users/$userId');
+
+  await ref.set({
+    "name": name,
+    "userType": userType,
+    "email": email,
+  }).then((_) {
+    toggleVisibility();
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content:
+          Text("Account registered successfully! Login with your new account."),
+    ));
+    Navigator.of(context).pop();
+  }).catchError((error) {
+    // The write failed...
+    toggleVisibility();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(error),
+    ));
+  });
+}
+
+// user account creation
 Future<void> createUserAccount(
-    context, emailAddress, password, showLoader) async {
+    context, name, userType, emailAddress, password, toggleVisibility) async {
   try {
-    showLoader == true;
-    final credential =
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+    toggleVisibility();
+
+    await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(
       email: emailAddress,
       password: password,
-    );
+    )
+        .then((value) {
+      saveUserInfo(context, value.user?.uid, name, userType, emailAddress,
+          toggleVisibility);
+    });
   } on FirebaseAuthException catch (e) {
-    showLoader == false;
+    toggleVisibility();
     if (e.code == 'weak-password') {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text("The password provided is too weak."),
@@ -22,7 +54,7 @@ Future<void> createUserAccount(
       ));
     }
   } catch (e) {
-    showLoader == false;
+    toggleVisibility();
     String error = e.toString();
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(error),
@@ -30,14 +62,23 @@ Future<void> createUserAccount(
   }
 }
 
+// user login
 Future<void> loginUser(
     context, emailAddress, password, toggleVisibility) async {
   try {
     toggleVisibility();
-    final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+    await FirebaseAuth.instance
+        .signInWithEmailAndPassword(
       email: emailAddress,
       password: password,
-    );
+    )
+        .then((value) {
+      toggleVisibility();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Logged in successfully."),
+      ));
+      Navigator.pushNamed(context, '/home');
+    });
   } on FirebaseAuthException catch (e) {
     toggleVisibility();
     if (e.code == 'user-not-found') {
@@ -56,4 +97,24 @@ Future<void> loginUser(
       content: Text(error),
     ));
   }
+}
+
+// log user out
+void logOutUser(context) {
+  FirebaseAuth.instance.signOut().then((value) {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text("Logged out successfully."),
+    ));
+    // Navigator.pushReplacementNamed(context, '/');
+  });
+}
+
+Object getUserInfo(userId) {
+  Object data = {};
+  DatabaseReference userRef = FirebaseDatabase.instance.ref('user/$userId');
+  userRef.onValue.listen((DatabaseEvent event) {
+    data = event.snapshot.value ?? {};
+  });
+
+  return data;
 }
