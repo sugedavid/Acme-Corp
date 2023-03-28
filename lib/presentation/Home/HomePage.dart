@@ -1,5 +1,6 @@
 import 'package:acme_corp/core/utils.dart';
 import 'package:acme_corp/domain/strings.dart';
+import 'package:acme_corp/presentation/Home/component/CreateTicketForm.dart';
 import 'package:acme_corp/presentation/Home/component/DrawerMenu.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -38,14 +39,24 @@ class HomePage extends ConsumerWidget {
             Expanded(child: fragmentPages[navIndex]),
           ],
         ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () => showCreateTicket(context),
+          label: const Text('Create ticket'),
+        ),
       );
     } else {
       // mobile view
       return Scaffold(
-        appBar: AppBar(title: const Text(appName)),
+        appBar: AppBar(elevation: 0, title: const Text(appName)),
         body: fragmentPages[navIndex],
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () => showCreateTicket(context),
+          label: const Text('Create ticket'),
+        ),
         drawer: const Drawer(child: DrawerMenu()),
       );
     }
   }
 }
+
+// create ticket dialog

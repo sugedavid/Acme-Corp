@@ -1,3 +1,4 @@
+import 'package:acme_corp/core/services.dart';
 import 'package:acme_corp/core/utils.dart';
 import 'package:acme_corp/domain/strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -77,7 +78,12 @@ class DrawerMenu extends ConsumerWidget {
                     title: navItems[index]['title'],
                     selected: index == navIndex,
                     onTap: () {
-                      ref.read(navProvider.notifier).state = index;
+                      if (index != navItems.length - 1) {
+                        ref.read(navProvider.notifier).state = index;
+                      }
+                      if (index == navItems.length - 1) {
+                        logOutUser(context);
+                      }
                       if (screenWidth < breakpoint) {
                         Navigator.pop(context);
                       }

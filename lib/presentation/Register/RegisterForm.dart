@@ -160,50 +160,8 @@ class _RegisterFormState extends State<RegisterForm> {
             ),
 
             // Register
-            SizedBox(
-              width: double.infinity,
-              height: 45,
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  primary: Colors.white,
-                  backgroundColor: AppColors.primaryColor,
-                  shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(50))),
-                ),
-                onPressed: () {
-                  // validate form
-                  if (_formKey.currentState!.validate()) {
-                    createUserAccount(
-                        context,
-                        _nameTextController.text,
-                        _userType,
-                        _emailTextController.text,
-                        _passwordTextController.text,
-                        _toggleVisibility);
-                  }
-                },
-                child: (showLoader)
-                    ? Center(
-                        child: LoadingAnimationWidget.beat(
-                          color: Colors.white,
-                          size: 24,
-                        ),
-                      )
-                    : const Text(
-                        'REGISTER',
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-              ),
-            ),
-
-            const SizedBox(
-              height: 30,
-            ),
-
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 // Log in
                 TextButton(
@@ -218,8 +176,37 @@ class _RegisterFormState extends State<RegisterForm> {
                     ),
                   ),
                 ),
+
+                // register
+                ElevatedButton(
+                  onPressed: () {
+                    // validate form
+                    if (_formKey.currentState!.validate()) {
+                      createUserAccount(
+                          context,
+                          _nameTextController.text,
+                          _userType,
+                          _emailTextController.text,
+                          _passwordTextController.text,
+                          _toggleVisibility);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: AppColors.primaryColorAccent,
+                  ),
+                  child: showLoader
+                      ? LoadingAnimationWidget.beat(
+                          color: Colors.white,
+                          size: 18,
+                        )
+                      : const Text('REGISTER'),
+                ),
               ],
-            )
+            ),
+
+            const SizedBox(
+              height: 15,
+            ),
           ],
         ),
       ),

@@ -1,6 +1,62 @@
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+
+// upload file and create ticket
+Future<void> pickFile(context, title, description, toggleVisibility) async {
+  FilePickerResult? result = await FilePicker.platform.pickFiles(
+    type: FileType.custom,
+    allowedExtensions: ['jpg', 'pdf', 'png'],
+  );
+
+  if (result != null) {
+    Uint8List? fileBytes = result.files.first.bytes;
+    String fileName = result.files.first.name;
+
+    // Upload file to storage
+    if (fileBytes != null) {
+      final storageRef = FirebaseStorage.instance.ref('uploads/$fileName');
+
+      await storageRef.putData(fileBytes).then((snapshot) async {
+        toggleVisibility();
+        DatabaseReference ref = FirebaseDatabase.instance.ref('tickets');
+        String url = await storageRef.getDownloadURL();
+        await ref.push().set({
+          "title": title,
+          "description": description,
+          "fileUrl": url,
+          'status': 'Pending',
+          'createdBy': FirebaseAuth.instance.currentUser?.uid,
+          'createdAt': DateTime.now().toString()
+        }).then((_) {
+          // save to db
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Ticket created sucessfully."),
+          ));
+          Navigator.of(context).pop();
+        }).catchError((error) {
+          // The db write failed
+          toggleVisibility();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(error),
+          ));
+        });
+      }).catchError((error) {
+        // The storage upload failed
+        toggleVisibility();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(error),
+        ));
+      });
+    }
+  } else {
+    // User canceled the picker
+  }
+}
 
 // set user info to db
 Future<void> saveUserInfo(
@@ -11,6 +67,7 @@ Future<void> saveUserInfo(
     "name": name,
     "userType": userType,
     "email": email,
+    'userId': userId,
   }).then((_) {
     toggleVisibility();
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
