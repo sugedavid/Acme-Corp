@@ -6,6 +6,11 @@ final navProvider = StateProvider<int>((ref) {
   return 0;
 });
 
+// ticket state
+final ticketProvider = StateProvider<Map<String, String>>((ref) {
+  return {};
+});
+
 // navigation drawer items
 final List<Map<dynamic, dynamic>> navItems = [
   {
@@ -40,3 +45,32 @@ final List<Map<dynamic, dynamic>> navItems = [
     ),
   }
 ];
+
+// List of transitions
+var transitions = [
+  'OPEN',
+  'IN- PROGRESS',
+  'BLOCKED',
+  'RESOLVED',
+  'RE-OPENED',
+  'CLOSED',
+];
+
+Color? statusColor(status) {
+  switch (status) {
+    case 'OPEN':
+      return Colors.green[100];
+    case 'IN- PROGRESS':
+      return Colors.orange[100];
+    case 'BLOCKED':
+      return Colors.red[100];
+    case 'RESOLVED':
+      return Colors.purple[100];
+    case 'RE-OPENED':
+      return Colors.green[100];
+    case 'CLOSED':
+      return Colors.red[100];
+    default:
+      return Colors.grey;
+  }
+}

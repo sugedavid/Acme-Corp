@@ -1,7 +1,9 @@
 import 'package:acme_corp/core/utils.dart';
 import 'package:acme_corp/domain/strings.dart';
-import 'package:acme_corp/presentation/Home/component/CreateTicketForm.dart';
-import 'package:acme_corp/presentation/Home/component/DrawerMenu.dart';
+import 'package:acme_corp/presentation/Home/components/CreateTicketForm.dart';
+import 'package:acme_corp/presentation/Home/components/DrawerMenu.dart';
+import 'package:acme_corp/presentation/Home/components/TicketsFragment.dart';
+import 'package:acme_corp/presentation/shared/color_schemes.g.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,7 +23,7 @@ class HomePage extends ConsumerWidget {
 
     final fragmentPages = <Widget>[
       const Center(child: Text('Dashboard')),
-      const Center(child: Text('Tickets')),
+      const TicketsFragment(),
     ];
 
     final screenWidth = MediaQuery.of(context).size.width;
@@ -29,6 +31,18 @@ class HomePage extends ConsumerWidget {
     if (screenWidth >= breakpoint) {
       // widescreen: menu on the left, content on the right
       return Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          title: const Text(
+            appName,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+            ),
+          ),
+          backgroundColor: lightColorScheme.primary,
+        ),
         body: Row(
           children: [
             const SizedBox(

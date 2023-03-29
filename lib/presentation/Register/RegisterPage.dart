@@ -1,5 +1,5 @@
 import 'package:acme_corp/presentation/Register/RegisterForm.dart';
-import 'package:acme_corp/presentation/shared/colors.dart';
+import 'package:acme_corp/presentation/shared/color_schemes.g.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -28,7 +28,7 @@ class RegisterPageState extends State<RegisterPage> {
             fontSize: 16,
           ),
         ),
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: lightColorScheme.primary,
       ),
       body: Form(
         child: Padding(

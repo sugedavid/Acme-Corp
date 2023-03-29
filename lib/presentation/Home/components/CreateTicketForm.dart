@@ -1,5 +1,4 @@
 import 'package:acme_corp/core/services.dart';
-import 'package:acme_corp/presentation/shared/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -71,7 +70,6 @@ class _CreateTicketFormState extends State<CreateTicketForm> {
                 }
                 return null;
               },
-              obscureText: true,
             ),
             const SizedBox(
               height: 40,
@@ -79,7 +77,7 @@ class _CreateTicketFormState extends State<CreateTicketForm> {
 
             // create ticket
             Container(
-              alignment: Alignment.center,
+              alignment: Alignment.centerRight,
               child: ElevatedButton(
                 onPressed: () {
                   // validate form
@@ -88,15 +86,12 @@ class _CreateTicketFormState extends State<CreateTicketForm> {
                         descriptionController.text, _toggleVisibility);
                   }
                 },
-                style: ElevatedButton.styleFrom(
-                  primary: AppColors.primaryColorAccent,
-                ),
                 child: showLoader
                     ? LoadingAnimationWidget.beat(
                         color: Colors.white,
                         size: 18,
                       )
-                    : const Text('UPLOAD FILE & CREATE'),
+                    : const Text('CREATE'),
               ),
             ),
 
@@ -117,13 +112,19 @@ Future<void> showCreateTicket(context) async {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('Create Ticket'),
+            const Text(
+              'Create Ticket',
+              style: TextStyle(fontSize: 16),
+            ),
             IconButton(
                 onPressed: (() => Navigator.pop(context)),
-                icon: const Icon(Icons.close))
+                icon: const Icon(
+                  Icons.close,
+                  size: 20,
+                ))
           ],
         ),
-        content: CreateTicketForm(),
+        content: const CreateTicketForm(),
       );
     },
   );

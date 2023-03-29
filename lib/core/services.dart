@@ -6,6 +6,75 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
+//get user info
+Future<String> getUserInfo(userId, child) async {
+  final userRef = FirebaseDatabase.instance.ref();
+  final snapshot = await userRef.child('users/$userId').get();
+
+  if (snapshot.child(child).value != null &&
+      snapshot.child(child).value != '') {
+    return snapshot.child(child).value.toString();
+  }
+  return '-';
+}
+
+// assign agent
+Future<void> assignAgent(context, ticketId, agentId) async {
+  DatabaseReference ref = FirebaseDatabase.instance.ref('tickets/$ticketId');
+
+  await ref.update({
+    'agent': agentId,
+  }).then((_) {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Agent assigned successfully.'),
+    ));
+    Navigator.of(context).pop();
+  }).catchError((error) {
+    // The write failed...
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(error),
+    ));
+  });
+}
+
+// assign customer
+Future<void> assignCustomer(context, ticketId, customerId) async {
+  DatabaseReference ref = FirebaseDatabase.instance.ref('tickets/$ticketId');
+
+  await ref.update({
+    'customer': customerId,
+  }).then((_) {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Customer assigned successfully.'),
+    ));
+    Navigator.of(context).pop();
+  }).catchError((error) {
+    // The write failed...
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(error),
+    ));
+  });
+}
+
+// transition ticket
+Future<void> transitionTicket(context, ticketId, transition) async {
+  DatabaseReference ref = FirebaseDatabase.instance.ref('tickets/$ticketId');
+
+  await ref.update({
+    'status': transition,
+  }).then((_) {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Ticket transitioned successfully.'),
+    ));
+    // Navigator.of(context).pop();
+  }).catchError((error) {
+    // The write failed...
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(error),
+    ));
+  });
+}
+
 // upload file and create ticket
 Future<void> pickFile(context, title, description, toggleVisibility) async {
   FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -22,20 +91,36 @@ Future<void> pickFile(context, title, description, toggleVisibility) async {
       final storageRef = FirebaseStorage.instance.ref('uploads/$fileName');
 
       await storageRef.putData(fileBytes).then((snapshot) async {
+        // save to db
         toggleVisibility();
-        DatabaseReference ref = FirebaseDatabase.instance.ref('tickets');
+        String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+        final userRef = FirebaseDatabase.instance.ref();
+        final snapshot = await userRef.child('users/$userId').get();
+
+        String customer =
+            (snapshot.child('userType').value.toString() == 'Customer')
+                ? snapshot.child('userId').value.toString()
+                : '';
+
+        String agent = (snapshot.child('userType').value.toString() == 'Agent')
+            ? snapshot.child('userId').value.toString()
+            : '';
+        DatabaseReference ref = FirebaseDatabase.instance.ref('tickets').push();
         String url = await storageRef.getDownloadURL();
-        await ref.push().set({
-          "title": title,
-          "description": description,
-          "fileUrl": url,
-          'status': 'Pending',
+        await ref.set({
+          'id': ref.key,
+          'title': title,
+          'description': description,
+          'fileUrl': url,
+          'status': 'OPEN',
+          'agent': agent,
+          'customer': customer,
           'createdBy': FirebaseAuth.instance.currentUser?.uid,
           'createdAt': DateTime.now().toString()
         }).then((_) {
-          // save to db
+          // success
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text("Ticket created sucessfully."),
+            content: Text('Ticket created sucessfully.'),
           ));
           Navigator.of(context).pop();
         }).catchError((error) {
@@ -64,15 +149,14 @@ Future<void> saveUserInfo(
   DatabaseReference ref = FirebaseDatabase.instance.ref('users/$userId');
 
   await ref.set({
-    "name": name,
-    "userType": userType,
-    "email": email,
+    'name': name,
+    'userType': userType,
+    'email': email,
     'userId': userId,
   }).then((_) {
     toggleVisibility();
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content:
-          Text("Account registered successfully! Login with your new account."),
+      content: Text('Account registered successfully.'),
     ));
     Navigator.of(context).pop();
   }).catchError((error) {
@@ -103,11 +187,11 @@ Future<void> createUserAccount(
     toggleVisibility();
     if (e.code == 'weak-password') {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("The password provided is too weak."),
+        content: Text('The password provided is too weak.'),
       ));
     } else if (e.code == 'email-already-in-use') {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("The account already exists for that email"),
+        content: Text('The account already exists for that email'),
       ));
     }
   } catch (e) {
@@ -132,7 +216,7 @@ Future<void> loginUser(
         .then((value) {
       toggleVisibility();
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Logged in successfully."),
+        content: Text('Logged in successfully.'),
       ));
       Navigator.pushNamed(context, '/home');
     });
@@ -140,11 +224,11 @@ Future<void> loginUser(
     toggleVisibility();
     if (e.code == 'user-not-found') {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("No user found for that email."),
+        content: Text('No user found for that email.'),
       ));
     } else if (e.code == 'wrong-password') {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Wrong password provided for that user."),
+        content: Text('Wrong password provided for that user.'),
       ));
     }
   } catch (e) {
@@ -157,21 +241,10 @@ Future<void> loginUser(
 }
 
 // log user out
-void logOutUser(context) {
-  FirebaseAuth.instance.signOut().then((value) {
+Future<void> logOutUser(context) async {
+  await FirebaseAuth.instance.signOut().then((value) {
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text("Logged out successfully."),
+      content: Text('Logged out successfully.'),
     ));
-    // Navigator.pushReplacementNamed(context, '/');
   });
-}
-
-Object getUserInfo(userId) {
-  Object data = {};
-  DatabaseReference userRef = FirebaseDatabase.instance.ref('user/$userId');
-  userRef.onValue.listen((DatabaseEvent event) {
-    data = event.snapshot.value ?? {};
-  });
-
-  return data;
 }

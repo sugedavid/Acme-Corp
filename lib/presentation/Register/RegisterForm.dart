@@ -1,6 +1,6 @@
 import 'package:acme_corp/core/services.dart';
 import 'package:acme_corp/domain/strings.dart';
-import 'package:acme_corp/presentation/shared/colors.dart';
+import 'package:acme_corp/presentation/shared/color_schemes.g.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -19,7 +19,7 @@ class _RegisterFormState extends State<RegisterForm> {
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
   String _userType = 'Customer';
-  // List of items in our dropdown menu
+  // List of user types
   var items = [
     'Customer',
     'Agent',
@@ -100,7 +100,9 @@ class _RegisterFormState extends State<RegisterForm> {
               items: items.map((String items) {
                 return DropdownMenuItem(
                   value: items,
-                  child: Text(items),
+                  child: Text(
+                    items,
+                  ),
                 );
               }).toList(),
               onChanged: (String? newValue) {
@@ -109,9 +111,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 });
               },
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
 
             // Email
             TextFormField(
@@ -168,10 +168,10 @@ class _RegisterFormState extends State<RegisterForm> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text(
+                  child: Text(
                     'Log in',
                     style: TextStyle(
-                      color: AppColors.primaryColor,
+                      color: lightColorScheme.primary,
                       fontSize: 14,
                     ),
                   ),
@@ -191,12 +191,9 @@ class _RegisterFormState extends State<RegisterForm> {
                           _toggleVisibility);
                     }
                   },
-                  style: ElevatedButton.styleFrom(
-                    primary: AppColors.primaryColorAccent,
-                  ),
                   child: showLoader
                       ? LoadingAnimationWidget.beat(
-                          color: Colors.white,
+                          color: lightColorScheme.primary,
                           size: 18,
                         )
                       : const Text('REGISTER'),
