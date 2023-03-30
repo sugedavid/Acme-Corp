@@ -6,6 +6,30 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
+// create customer profile
+Future<void> createCustomerProfile(
+    context, name, email, toggleVisibility) async {
+  DatabaseReference ref = FirebaseDatabase.instance.ref('users').push();
+
+  await ref.set({
+    'name': name,
+    'userType': 'Customer',
+    'email': email,
+    'userId': ref.key,
+  }).then((_) {
+    toggleVisibility();
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Customer profile created successfully.'),
+    ));
+  }).catchError((error) {
+    // The write failed...
+    toggleVisibility();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(error),
+    ));
+  });
+}
+
 //get user info
 Future<String> getUserInfo(userId, child) async {
   final userRef = FirebaseDatabase.instance.ref();
@@ -75,8 +99,50 @@ Future<void> transitionTicket(context, ticketId, transition) async {
   });
 }
 
+// create ticket
+Future<void> createTicket(
+    context, title, description, url, toggleVisibility) async {
+  // save to db
+  toggleVisibility();
+  String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+  final userRef = FirebaseDatabase.instance.ref();
+  final snapshot = await userRef.child('users/$userId').get();
+
+  String customer = (snapshot.child('userType').value.toString() == 'Customer')
+      ? snapshot.child('userId').value.toString()
+      : '';
+
+  String agent = (snapshot.child('userType').value.toString() == 'Agent')
+      ? snapshot.child('userId').value.toString()
+      : '';
+  DatabaseReference ref = FirebaseDatabase.instance.ref('tickets').push();
+  await ref.set({
+    'id': ref.key,
+    'title': title,
+    'description': description,
+    'fileUrl': url,
+    'status': 'OPEN',
+    'agent': agent,
+    'customer': customer,
+    'createdBy': FirebaseAuth.instance.currentUser?.uid,
+    'createdAt': DateTime.now().toString()
+  }).then((_) {
+    // success
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Ticket created sucessfully.'),
+    ));
+    Navigator.of(context).pop();
+  }).catchError((error) {
+    // The db write failed
+    toggleVisibility();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(error),
+    ));
+  });
+}
+
 // upload file and create ticket
-Future<void> pickFile(context, title, description, toggleVisibility) async {
+Future<void> pickFile(context, toggleVisibility, uploadFile) async {
   FilePickerResult? result = await FilePicker.platform.pickFiles(
     type: FileType.custom,
     allowedExtensions: ['jpg', 'pdf', 'png'],
@@ -91,45 +157,11 @@ Future<void> pickFile(context, title, description, toggleVisibility) async {
       final storageRef = FirebaseStorage.instance.ref('uploads/$fileName');
 
       await storageRef.putData(fileBytes).then((snapshot) async {
-        // save to db
-        toggleVisibility();
-        String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
-        final userRef = FirebaseDatabase.instance.ref();
-        final snapshot = await userRef.child('users/$userId').get();
+        uploadFile(storageRef.getDownloadURL(), fileName);
 
-        String customer =
-            (snapshot.child('userType').value.toString() == 'Customer')
-                ? snapshot.child('userId').value.toString()
-                : '';
-
-        String agent = (snapshot.child('userType').value.toString() == 'Agent')
-            ? snapshot.child('userId').value.toString()
-            : '';
-        DatabaseReference ref = FirebaseDatabase.instance.ref('tickets').push();
-        String url = await storageRef.getDownloadURL();
-        await ref.set({
-          'id': ref.key,
-          'title': title,
-          'description': description,
-          'fileUrl': url,
-          'status': 'OPEN',
-          'agent': agent,
-          'customer': customer,
-          'createdBy': FirebaseAuth.instance.currentUser?.uid,
-          'createdAt': DateTime.now().toString()
-        }).then((_) {
-          // success
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Ticket created sucessfully.'),
-          ));
-          Navigator.of(context).pop();
-        }).catchError((error) {
-          // The db write failed
-          toggleVisibility();
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(error),
-          ));
-        });
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('File uploaded sucessfully.'),
+        ));
       }).catchError((error) {
         // The storage upload failed
         toggleVisibility();
@@ -140,6 +172,7 @@ Future<void> pickFile(context, title, description, toggleVisibility) async {
     }
   } else {
     // User canceled the picker
+    uploadFile('', 'No file uploaded');
   }
 }
 
@@ -241,10 +274,12 @@ Future<void> loginUser(
 }
 
 // log user out
-Future<void> logOutUser(context) async {
-  await FirebaseAuth.instance.signOut().then((value) {
+void logOutUser(context) async {
+  FirebaseAuth.instance.signOut().then((value) {
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text('Logged out successfully.'),
     ));
   });
+  Navigator.of(context)
+      .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
 }
