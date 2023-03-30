@@ -1,5 +1,6 @@
 import 'package:acme_corp/domain/strings.dart';
 import 'package:acme_corp/presentation/Login/LoginForm.dart';
+import 'package:acme_corp/presentation/shared/color_schemes.g.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -33,6 +34,7 @@ class LoginPageState extends State<LoginPage> {
             fontSize: 16,
           ),
         ),
+        backgroundColor: lightColorScheme.primary,
       ),
       body: Form(
         child: Padding(

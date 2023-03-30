@@ -1,6 +1,5 @@
 import 'package:acme_corp/core/services.dart';
 import 'package:acme_corp/core/utils.dart';
-import 'package:acme_corp/domain/strings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -35,33 +34,30 @@ class DrawerMenu extends ConsumerWidget {
             DrawerHeader(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // app name
-                  ListTile(
-                      leading: const Image(
-                          height: 24,
-                          width: 24,
-                          image: AssetImage('assets/images/logo.png')),
-                      title: const Text(
-                        appName,
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      onTap: () {}),
-
                   // user name
-                  Text(userInfo['name'] ?? 'No name'),
+                  Text(
+                    userInfo['name'] ?? 'No name',
+                    style: const TextStyle(fontSize: 14),
+                  ),
 
                   // email
-                  Text(FirebaseAuth.instance.currentUser?.email ?? 'No email'),
+                  Text(
+                    FirebaseAuth.instance.currentUser?.email ?? 'No email',
+                    style: const TextStyle(fontSize: 14),
+                  ),
                   const SizedBox(height: 10),
 
                   // user type
                   Chip(
                       backgroundColor: userInfo['userType'] == 'Agent'
-                          ? Colors.green[100]
+                          ? Colors.purple[100]
                           : Colors.orange[100],
-                      label: Text(userInfo['userType'] ?? 'No type'))
+                      label: Text(
+                        userInfo['userType'] ?? 'No type',
+                        style: const TextStyle(fontSize: 12),
+                      ))
                 ],
               ),
             ),

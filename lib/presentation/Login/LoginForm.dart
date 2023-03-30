@@ -1,6 +1,6 @@
 import 'package:acme_corp/core/services.dart';
 import 'package:acme_corp/domain/strings.dart';
-import 'package:acme_corp/presentation/shared/colors.dart';
+import 'package:acme_corp/presentation/shared/color_schemes.g.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -109,30 +109,6 @@ class _LoginFormState extends State<LoginForm> {
               height: 40,
             ),
 
-            // Log In
-            Container(
-              alignment: Alignment.centerRight,
-              child: ElevatedButton(
-                onPressed: () {
-                  // validate form
-                  if (_formKey.currentState!.validate()) {
-                    loginUser(context, _emailTextController.text,
-                        _passwordTextController.text, _toggleVisibility);
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: AppColors.primaryColorAccent,
-                ),
-                child: showLoader
-                    ? LoadingAnimationWidget.beat(
-                        color: Colors.white,
-                        size: 18,
-                      )
-                    : const Text('LOG IN'),
-              ),
-            ),
-            const SizedBox(height: 30),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -141,25 +117,30 @@ class _LoginFormState extends State<LoginForm> {
                   onPressed: () {
                     Navigator.pushNamed(context, '/register');
                   },
-                  child: const Text(
-                    'Register account',
+                  child: Text(
+                    'Register',
                     style: TextStyle(
-                      color: AppColors.primaryColor,
+                      color: lightColorScheme.primary,
                       fontSize: 14,
                     ),
                   ),
                 ),
 
-                // Forgot Password
-                TextButton(
-                  onPressed: () {},
-                  child: const Text(
-                    'Forgot password',
-                    style: TextStyle(
-                      color: AppColors.primaryColor,
-                      fontSize: 14,
-                    ),
-                  ),
+                // log in
+                ElevatedButton(
+                  onPressed: () {
+                    // validate form
+                    if (_formKey.currentState!.validate()) {
+                      loginUser(context, _emailTextController.text,
+                          _passwordTextController.text, _toggleVisibility);
+                    }
+                  },
+                  child: showLoader
+                      ? LoadingAnimationWidget.beat(
+                          color: lightColorScheme.primary,
+                          size: 18,
+                        )
+                      : const Text('LOG IN'),
                 ),
               ],
             )
