@@ -1,5 +1,6 @@
 import 'package:acme_corp/core/services.dart';
 import 'package:acme_corp/core/utils.dart';
+import 'package:acme_corp/presentation/Home/components/CreateCustomerForm.dart';
 import 'package:acme_corp/presentation/Home/components/TicketDrawerMenu.dart';
 import 'package:acme_corp/presentation/shared/color_schemes.g.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -51,7 +52,7 @@ class TicketDetailPage extends ConsumerWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
                   child: LoadingAnimationWidget.beat(
-                color: Colors.white,
+                color: lightColorScheme.primary,
                 size: 18,
               ));
             }
@@ -119,18 +120,25 @@ class TicketDetailPage extends ConsumerWidget {
                             Text('Customer:',
                                 style: TextStyle(
                                   color: lightColorScheme.primary,
+                                  fontSize: 12,
                                 )),
                             FutureBuilder(
                                 future:
                                     getUserInfo(ticketInfo['customer'], 'name'),
                                 builder: (context, snapshot) {
-                                  return Text(snapshot.data.toString());
+                                  return Text(
+                                    snapshot.data.toString(),
+                                    style: const TextStyle(fontSize: 12),
+                                  );
                                 }),
                             FutureBuilder(
                                 future: getUserInfo(
                                     ticketInfo['customer'], 'email'),
                                 builder: (context, snapshot) {
-                                  return Text(snapshot.data.toString());
+                                  return Text(
+                                    snapshot.data.toString(),
+                                    style: const TextStyle(fontSize: 12),
+                                  );
                                 }),
                           ],
                         ),
@@ -140,19 +148,25 @@ class TicketDetailPage extends ConsumerWidget {
                           children: [
                             Text('Agent:',
                                 style: TextStyle(
-                                  color: lightColorScheme.primary,
-                                )),
+                                    color: lightColorScheme.primary,
+                                    fontSize: 12)),
                             FutureBuilder(
                                 future:
                                     getUserInfo(ticketInfo['agent'], 'name'),
                                 builder: (context, snapshot) {
-                                  return Text(snapshot.data.toString());
+                                  return Text(
+                                    snapshot.data.toString(),
+                                    style: const TextStyle(fontSize: 12),
+                                  );
                                 }),
                             FutureBuilder(
                                 future:
                                     getUserInfo(ticketInfo['agent'], 'email'),
                                 builder: (context, snapshot) {
-                                  return Text(snapshot.data.toString());
+                                  return Text(
+                                    snapshot.data.toString(),
+                                    style: const TextStyle(fontSize: 12),
+                                  );
                                 }),
                           ],
                         ),
@@ -170,6 +184,18 @@ class TicketDetailPage extends ConsumerWidget {
                             crossAxisAlignment: WrapCrossAlignment.center,
                             children: [
                               if (snapshot.data.toString() == 'Agent') ...{
+                                //create customer
+
+                                Flexible(
+                                  child: OutlinedButton(
+                                      onPressed: () =>
+                                          showCreateCustomer(context),
+                                      child: const Text(
+                                        'Create customer',
+                                        style: TextStyle(fontSize: 12),
+                                      )),
+                                ),
+                                const SizedBox(width: 10),
                                 //assign customer
 
                                 Flexible(
@@ -185,9 +211,13 @@ class TicketDetailPage extends ConsumerWidget {
 
                                         Scaffold.of(context).openEndDrawer();
                                       },
-                                      child: const Text('Assign customer')),
+                                      child: const Text(
+                                        'Assign customer',
+                                        style: TextStyle(fontSize: 12),
+                                      )),
                                 ),
-                                const SizedBox(width: 10),
+                                const SizedBox(width: 11),
+
                                 //assign agent
                                 Flexible(
                                   child: OutlinedButton(
@@ -201,7 +231,10 @@ class TicketDetailPage extends ConsumerWidget {
                                         };
                                         Scaffold.of(context).openEndDrawer();
                                       },
-                                      child: const Text('Assign agent')),
+                                      child: const Text(
+                                        'Assign agent',
+                                        style: TextStyle(fontSize: 12),
+                                      )),
                                 ),
                               },
 

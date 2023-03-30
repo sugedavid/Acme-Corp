@@ -1,4 +1,5 @@
 import 'package:acme_corp/core/services.dart';
+import 'package:acme_corp/presentation/shared/color_schemes.g.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -10,17 +11,28 @@ class CreateTicketForm extends StatefulWidget {
 }
 
 class _CreateTicketFormState extends State<CreateTicketForm> {
+  String fileUrl = '';
+  String fileName = 'No file uploaded';
+  bool showLoader = false;
+
   @override
   Widget build(BuildContext context) {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     final titleController = TextEditingController();
     final descriptionController = TextEditingController();
 
-    bool showLoader = false;
-
     void _toggleVisibility() {
       setState(() {
         showLoader = !showLoader;
+      });
+    }
+
+    void uploadFile(url, name) {
+      setState(() {
+        url.then((value) {
+          fileUrl = value;
+        });
+        fileName = name;
       });
     }
 
@@ -50,9 +62,7 @@ class _CreateTicketFormState extends State<CreateTicketForm> {
                 return null;
               },
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
 
             // Description
             TextFormField(
@@ -71,27 +81,49 @@ class _CreateTicketFormState extends State<CreateTicketForm> {
                 return null;
               },
             ),
-            const SizedBox(
-              height: 40,
-            ),
+            const SizedBox(height: 40),
 
-            // create ticket
+            // uploaded file
+            Text(fileName),
+            const SizedBox(height: 40),
+
             Container(
               alignment: Alignment.centerRight,
-              child: ElevatedButton(
-                onPressed: () {
-                  // validate form
-                  if (formKey.currentState!.validate()) {
-                    pickFile(context, titleController.text,
-                        descriptionController.text, _toggleVisibility);
-                  }
-                },
-                child: showLoader
-                    ? LoadingAnimationWidget.beat(
-                        color: Colors.white,
-                        size: 18,
-                      )
-                    : const Text('CREATE'),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // upload file
+                  TextButton(
+                    onPressed: () {
+                      pickFile(context, _toggleVisibility, uploadFile);
+                    },
+                    child: const Text(
+                      'Upload file',
+                    ),
+                  ),
+
+                  // create ticket
+
+                  ElevatedButton(
+                    onPressed: () {
+                      // validate form
+                      if (formKey.currentState!.validate()) {
+                        createTicket(
+                            context,
+                            titleController.text,
+                            descriptionController.text,
+                            fileUrl,
+                            _toggleVisibility);
+                      }
+                    },
+                    child: showLoader
+                        ? LoadingAnimationWidget.beat(
+                            color: lightColorScheme.primary,
+                            size: 18,
+                          )
+                        : const Text('CREATE'),
+                  ),
+                ],
               ),
             ),
 

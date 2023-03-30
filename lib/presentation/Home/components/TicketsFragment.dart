@@ -1,5 +1,8 @@
+import 'package:acme_corp/core/services.dart';
 import 'package:acme_corp/core/utils.dart';
 import 'package:acme_corp/presentation/Home/TicketDetailPage.dart';
+import 'package:acme_corp/presentation/shared/color_schemes.g.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -12,6 +15,14 @@ class TicketsFragment extends StatelessWidget {
   Widget build(BuildContext context) {
     var tickets = <dynamic>[];
 
+    String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+    String userType = '';
+
+    getUserInfo(userId, 'userType').then((String result) {
+      userType = result;
+    });
+
     return StreamBuilder(
         stream: FirebaseDatabase.instance.ref('tickets').onValue,
         builder: (context, snapshot) {
@@ -19,23 +30,31 @@ class TicketsFragment extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
                 child: LoadingAnimationWidget.beat(
-              color: Colors.white,
+              color: lightColorScheme.primary,
               size: 18,
             ));
           }
 
           // data
-          if (snapshot.hasData &&
+          if ((snapshot.hasData &&
               snapshot.data != null &&
-              (snapshot.data! as DatabaseEvent).snapshot.value != null) {
+              (snapshot.data! as DatabaseEvent).snapshot.value != null)) {
             var ticketsSnapshot = Map<dynamic, dynamic>.from(
                 (snapshot.data as DatabaseEvent).snapshot.value
                     as Map<dynamic, dynamic>);
 
             tickets.clear();
-            ticketsSnapshot.forEach((key, value) {
-              tickets.add(value);
-            });
+            if (userType == 'Agent') {
+              ticketsSnapshot.forEach((key, value) {
+                tickets.add(value);
+              });
+            } else {
+              ticketsSnapshot.forEach((key, value) {
+                if (value['createdBy'] == userId) {
+                  tickets.add(value);
+                }
+              });
+            }
 
             return ListView(
               children: [

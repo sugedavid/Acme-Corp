@@ -1,5 +1,6 @@
 import 'package:acme_corp/core/services.dart';
 import 'package:acme_corp/core/utils.dart';
+import 'package:acme_corp/presentation/shared/color_schemes.g.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,7 +22,7 @@ class TicketDrawerMenu extends ConsumerWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
                 child: LoadingAnimationWidget.beat(
-              color: Colors.white,
+              color: lightColorScheme.primary,
               size: 18,
             ));
           }
@@ -68,14 +69,20 @@ class TicketDrawerMenu extends ConsumerWidget {
                         children: [
                           const Icon(
                             Icons.account_circle_outlined,
-                            size: 48,
+                            size: 24,
                           ),
                           const SizedBox(width: 10),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(users[index]['name'] ?? 'No name'),
-                              Text(users[index]['email'] ?? 'No email'),
+                              Text(
+                                users[index]['name'] ?? 'No name',
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                              Text(
+                                users[index]['email'] ?? 'No email',
+                                style: const TextStyle(fontSize: 12),
+                              ),
                             ],
                           )
                         ],
@@ -94,6 +101,7 @@ class TicketDrawerMenu extends ConsumerWidget {
                           },
                           child: const Text(
                             'Assign',
+                            style: TextStyle(fontSize: 12),
                           )),
                       const SizedBox(height: 10),
                     ],
