@@ -1,6 +1,7 @@
 import 'package:acme_corp/core/utils.dart';
 import 'package:acme_corp/domain/strings.dart';
 import 'package:acme_corp/presentation/Home/components/CreateTicketForm.dart';
+import 'package:acme_corp/presentation/Home/components/DashboardFragment.dart';
 import 'package:acme_corp/presentation/Home/components/DrawerMenu.dart';
 import 'package:acme_corp/presentation/Home/components/TicketsFragment.dart';
 import 'package:acme_corp/presentation/shared/color_schemes.g.dart';
@@ -22,7 +23,7 @@ class HomePage extends ConsumerWidget {
     var navIndex = ref.watch(navProvider);
 
     final fragmentPages = <Widget>[
-      const Center(child: Text('Dashboard')),
+      const DashboardFragment(),
       const TicketsFragment(),
     ];
 

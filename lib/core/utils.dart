@@ -74,7 +74,7 @@ final List<Map<dynamic, dynamic>> customerItems = [
 // List of transitions
 var transitions = [
   'OPEN',
-  'IN- PROGRESS',
+  'IN-PROGRESS',
   'BLOCKED',
   'RESOLVED',
   'RE-OPENED',
@@ -85,16 +85,16 @@ Color? statusColor(status) {
   switch (status) {
     case 'OPEN':
       return Colors.green[100];
-    case 'IN- PROGRESS':
+    case 'IN-PROGRESS':
       return Colors.orange[100];
     case 'BLOCKED':
       return Colors.red[100];
     case 'RESOLVED':
       return Colors.purple[100];
     case 'RE-OPENED':
-      return Colors.green[100];
+      return Colors.blue[100];
     case 'CLOSED':
-      return Colors.red[100];
+      return Colors.brown[100];
     default:
       return Colors.grey;
   }
