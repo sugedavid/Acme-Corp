@@ -93,12 +93,12 @@ class TicketDetailPage extends ConsumerWidget {
                   color: Colors.white,
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(10),
-                    title: Text(ticketInfo['title']),
+                    title: Text(ticketInfo['title'] ?? ''),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          ticketInfo['description'],
+                          ticketInfo['description'] ?? '',
                           style: const TextStyle(fontSize: 12),
                           textAlign: TextAlign.start,
                         ),
@@ -108,7 +108,7 @@ class TicketDetailPage extends ConsumerWidget {
                                 statusColor(ticketInfo['status']) ??
                                     Colors.purple[100],
                             label: Text(
-                              ticketInfo['status'],
+                              ticketInfo['status'] ?? '',
                               style: const TextStyle(fontSize: 8),
                             )),
                       ],
@@ -196,7 +196,7 @@ class TicketDetailPage extends ConsumerWidget {
                       future: getUserInfo(userId, 'userType'),
                       builder: (context, snapshot) {
                         return Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.end,
+                          alignment: WrapAlignment.end,
                           children: [
                             if (snapshot.data.toString() == 'Agent') ...{
                               // view uploaded file
