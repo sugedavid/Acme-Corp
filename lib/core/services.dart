@@ -6,6 +6,28 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
+// send message
+Future<void> sendMessage(
+    context, ticketId, message, senderId, senderName) async {
+  DatabaseReference ref =
+      FirebaseDatabase.instance.ref('tickets/$ticketId/conversations/').push();
+
+  await ref
+      .set({
+        'messageId': ref.key,
+        'message': message,
+        'senderId': senderId,
+        'senderName': senderName,
+      })
+      .then((_) {})
+      .catchError((error) {
+        // The write failed...
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(error),
+        ));
+      });
+}
+
 // create customer profile
 Future<void> createCustomerProfile(
     context, name, email, toggleVisibility) async {
@@ -280,6 +302,5 @@ void logOutUser(context) async {
       content: Text('Logged out successfully.'),
     ));
   });
-  Navigator.of(context)
-      .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+  Navigator.of(context).pushReplacementNamed('/login');
 }

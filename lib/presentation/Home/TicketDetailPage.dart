@@ -24,6 +24,17 @@ class TicketDetailPage extends ConsumerWidget {
     String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
     Map ticketInfo = <dynamic, dynamic>{};
 
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+    final messageController = TextEditingController();
+
+    String userName = '';
+
+    getUserInfo(userId, 'name').then((String result) {
+      userName = result;
+    });
+
+    var converstions = <dynamic>[];
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -63,131 +74,155 @@ class TicketDetailPage extends ConsumerWidget {
               ticketInfo = Map<dynamic, dynamic>.from(
                   (snapshot.data! as DatabaseEvent).snapshot.value
                       as Map<dynamic, dynamic>);
+
+              converstions.clear();
+
+              ticketInfo['conversations']?.forEach((key, value) {
+                converstions.add(value);
+              });
             }
 
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  // ticket info
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              // shrinkWrap: true,
+              children: [
+                // ticket info
 
-                  Card(
-                    margin: const EdgeInsets.fromLTRB(30, 20, 30, 0),
-                    color: Colors.white,
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.all(10),
-                      title: Text(ticketInfo['title']),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            ticketInfo['description'],
-                            style: const TextStyle(fontSize: 12),
-                            textAlign: TextAlign.start,
-                          ),
-                          const SizedBox(height: 10),
-                          Chip(
-                              backgroundColor:
-                                  statusColor(ticketInfo['status']) ??
-                                      Colors.purple[100],
-                              label: Text(
-                                ticketInfo['status'],
-                                style: const TextStyle(fontSize: 8),
-                              )),
-                        ],
-                      ),
-                      trailing: Text(
-                        createdAt,
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-
-                  // agent & customer info
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                Card(
+                  margin: const EdgeInsets.fromLTRB(30, 20, 30, 0),
+                  color: Colors.white,
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.all(10),
+                    title: Text(ticketInfo['title']),
+                    subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // customer
-                        Column(
-                          children: [
-                            Text('Customer:',
-                                style: TextStyle(
-                                  color: lightColorScheme.primary,
-                                  fontSize: 12,
-                                )),
-                            FutureBuilder(
-                                future:
-                                    getUserInfo(ticketInfo['customer'], 'name'),
-                                builder: (context, snapshot) {
-                                  return Text(
-                                    snapshot.data.toString(),
-                                    style: const TextStyle(fontSize: 12),
-                                  );
-                                }),
-                            FutureBuilder(
-                                future: getUserInfo(
-                                    ticketInfo['customer'], 'email'),
-                                builder: (context, snapshot) {
-                                  return Text(
-                                    snapshot.data.toString(),
-                                    style: const TextStyle(fontSize: 12),
-                                  );
-                                }),
-                          ],
+                        Text(
+                          ticketInfo['description'],
+                          style: const TextStyle(fontSize: 12),
+                          textAlign: TextAlign.start,
                         ),
-                        const SizedBox(width: 10),
-                        // agent
-                        Column(
-                          children: [
-                            Text('Agent:',
-                                style: TextStyle(
-                                    color: lightColorScheme.primary,
-                                    fontSize: 12)),
-                            FutureBuilder(
-                                future:
-                                    getUserInfo(ticketInfo['agent'], 'name'),
-                                builder: (context, snapshot) {
-                                  return Text(
-                                    snapshot.data.toString(),
-                                    style: const TextStyle(fontSize: 12),
-                                  );
-                                }),
-                            FutureBuilder(
-                                future:
-                                    getUserInfo(ticketInfo['agent'], 'email'),
-                                builder: (context, snapshot) {
-                                  return Text(
-                                    snapshot.data.toString(),
-                                    style: const TextStyle(fontSize: 12),
-                                  );
-                                }),
-                          ],
-                        ),
+                        const SizedBox(height: 10),
+                        Chip(
+                            backgroundColor:
+                                statusColor(ticketInfo['status']) ??
+                                    Colors.purple[100],
+                            label: Text(
+                              ticketInfo['status'],
+                              style: const TextStyle(fontSize: 8),
+                            )),
                       ],
                     ),
+                    trailing: Text(
+                      createdAt,
+                      style: const TextStyle(fontSize: 12),
+                    ),
                   ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
 
-                  // actions
+                // agent & customer info
 
-                  Builder(builder: (context) {
-                    return FutureBuilder(
-                        future: getUserInfo(userId, 'userType'),
-                        builder: (context, snapshot) {
-                          return Wrap(
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            children: [
-                              if (snapshot.data.toString() == 'Agent') ...{
-                                //create customer
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // customer
+                      Column(
+                        children: [
+                          Text('Customer:',
+                              style: TextStyle(
+                                color: lightColorScheme.primary,
+                                fontSize: 12,
+                              )),
+                          FutureBuilder(
+                              future:
+                                  getUserInfo(ticketInfo['customer'], 'name'),
+                              builder: (context, snapshot) {
+                                return Text(
+                                  snapshot.data.toString(),
+                                  style: const TextStyle(fontSize: 12),
+                                );
+                              }),
+                          FutureBuilder(
+                              future:
+                                  getUserInfo(ticketInfo['customer'], 'email'),
+                              builder: (context, snapshot) {
+                                return Text(
+                                  snapshot.data.toString(),
+                                  style: const TextStyle(fontSize: 12),
+                                );
+                              }),
+                        ],
+                      ),
+                      const SizedBox(width: 10),
+                      // agent
+                      Column(
+                        children: [
+                          Text('Agent:',
+                              style: TextStyle(
+                                  color: lightColorScheme.primary,
+                                  fontSize: 12)),
+                          FutureBuilder(
+                              future: getUserInfo(ticketInfo['agent'], 'name'),
+                              builder: (context, snapshot) {
+                                return Text(
+                                  snapshot.data.toString(),
+                                  style: const TextStyle(fontSize: 12),
+                                );
+                              }),
+                          FutureBuilder(
+                              future: getUserInfo(ticketInfo['agent'], 'email'),
+                              builder: (context, snapshot) {
+                                return Text(
+                                  snapshot.data.toString(),
+                                  style: const TextStyle(fontSize: 12),
+                                );
+                              }),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                // actions
 
+                Builder(builder: (context) {
+                  return FutureBuilder(
+                      future: getUserInfo(userId, 'userType'),
+                      builder: (context, snapshot) {
+                        return Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.end,
+                          children: [
+                            if (snapshot.data.toString() == 'Agent') ...{
+                              // view uploaded file
+                              if (ticketInfo['fileUrl'] != null &&
+                                  ticketInfo['fileUrl'] != '')
                                 Flexible(
-                                  child: OutlinedButton(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5),
+                                    child: TextButton(
+                                        onPressed: () => openFileUrl(
+                                            context, ticketInfo['fileUrl']),
+                                        child: const Text(
+                                          'View file',
+                                          style: TextStyle(fontSize: 12),
+                                        )),
+                                  ),
+                                ),
+
+                              //create customer
+
+                              Flexible(
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  child: TextButton(
                                       onPressed: () =>
                                           showCreateCustomer(context),
                                       child: const Text(
@@ -195,11 +230,15 @@ class TicketDetailPage extends ConsumerWidget {
                                         style: TextStyle(fontSize: 12),
                                       )),
                                 ),
-                                const SizedBox(width: 10),
-                                //assign customer
+                              ),
 
-                                Flexible(
-                                  child: OutlinedButton(
+                              //assign customer
+
+                              Flexible(
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  child: TextButton(
                                       onPressed: () {
                                         ref
                                             .read(ticketProvider.notifier)
@@ -216,11 +255,14 @@ class TicketDetailPage extends ConsumerWidget {
                                         style: TextStyle(fontSize: 12),
                                       )),
                                 ),
-                                const SizedBox(width: 11),
+                              ),
 
-                                //assign agent
-                                Flexible(
-                                  child: OutlinedButton(
+                              //assign agent
+                              Flexible(
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  child: TextButton(
                                       onPressed: () {
                                         ref
                                             .read(ticketProvider.notifier)
@@ -236,13 +278,16 @@ class TicketDetailPage extends ConsumerWidget {
                                         style: TextStyle(fontSize: 12),
                                       )),
                                 ),
-                              },
+                              ),
+                            },
 
-                              // transistion
-                              Flexible(
+                            // transistion
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Flexible(
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 30, vertical: 20),
+                                      horizontal: 30),
                                   child: DropdownButton(
                                     // isExpanded: true,
                                     value: ticketInfo['status'],
@@ -263,14 +308,90 @@ class TicketDetailPage extends ConsumerWidget {
                                   ),
                                 ),
                               ),
-                            ],
-                          );
-                        });
-                  }),
+                            ),
+                          ],
+                        );
+                      });
+                }),
 
-                  const SizedBox(height: 20),
-                ],
-              ),
+                const SizedBox(height: 20),
+
+                // conversations
+
+                // message list
+                converstions.isNotEmpty
+                    ? Expanded(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: converstions.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ListTile(
+                              title: Text(
+                                converstions[index]?['senderName'] ?? '',
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                              subtitle: Text(
+                                converstions[index]?['message'] ?? '',
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    : const Expanded(
+                        child: Center(child: Text('No conversations'))),
+
+                // send message
+                Form(
+                  key: formKey,
+                  child: Card(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 15),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          // The chat input field
+                          Flexible(
+                            child: TextFormField(
+                              controller: messageController,
+                              keyboardType: TextInputType.text,
+                              decoration: const InputDecoration.collapsed(
+                                hintText: 'Send a message',
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Write a message';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+
+                          // send
+                          IconButton(
+                              onPressed: () {
+                                if (formKey.currentState!.validate()) {
+                                  sendMessage(
+                                          context,
+                                          ticketInfo['id'],
+                                          messageController.text,
+                                          userId,
+                                          userName)
+                                      .then((value) =>
+                                          messageController.text = '');
+                                }
+                              },
+                              icon: Icon(
+                                Icons.send_rounded,
+                                color: lightColorScheme.primary,
+                              ))
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             );
           }),
     );
