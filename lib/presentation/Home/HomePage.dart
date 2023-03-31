@@ -4,6 +4,7 @@ import 'package:acme_corp/presentation/Home/components/CreateTicketForm.dart';
 import 'package:acme_corp/presentation/Home/components/DrawerMenu.dart';
 import 'package:acme_corp/presentation/Home/components/TicketsFragment.dart';
 import 'package:acme_corp/presentation/shared/color_schemes.g.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,6 +13,12 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user == null) {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+      }
+    });
     var navIndex = ref.watch(navProvider);
 
     final fragmentPages = <Widget>[

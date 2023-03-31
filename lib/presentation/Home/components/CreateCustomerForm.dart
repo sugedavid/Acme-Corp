@@ -32,8 +32,6 @@ class _CreateCustomerFormState extends State<CreateCustomerForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(height: 10),
-
             // name
             TextFormField(
               controller: nameTextController,

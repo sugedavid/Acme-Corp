@@ -50,7 +50,8 @@ class TicketsFragment extends StatelessWidget {
               });
             } else {
               ticketsSnapshot.forEach((key, value) {
-                if (value['createdBy'] == userId) {
+                if (value['createdBy'] == userId ||
+                    value['customer'] == userId) {
                   tickets.add(value);
                 }
               });

@@ -43,8 +43,6 @@ class _CreateTicketFormState extends State<CreateTicketForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(height: 15),
-
             // Title
             TextFormField(
               controller: titleController,

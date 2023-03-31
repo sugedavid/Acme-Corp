@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // navigation state
 final navProvider = StateProvider<int>((ref) {
@@ -23,6 +24,30 @@ final List<Map<dynamic, dynamic>> navItems = [
       size: 18,
     ),
   },
+  {
+    'title': const Text(
+      'Tickets',
+      style: TextStyle(fontSize: 14),
+    ),
+    'icon': const Icon(
+      Icons.assignment_outlined,
+      size: 18,
+    ),
+  },
+  {
+    'title': const Text(
+      'Log out',
+      style: TextStyle(fontSize: 14, color: Colors.red),
+    ),
+    'icon': Icon(
+      Icons.logout_outlined,
+      color: Colors.red.withOpacity(0.7),
+      size: 18,
+    ),
+  }
+];
+
+final List<Map<dynamic, dynamic>> customerItems = [
   {
     'title': const Text(
       'Tickets',
@@ -72,5 +97,15 @@ Color? statusColor(status) {
       return Colors.red[100];
     default:
       return Colors.grey;
+  }
+}
+
+// open file url
+Future<void> openFileUrl(context, fileUrl) async {
+  final Uri url = Uri.parse(fileUrl);
+  if (!await launchUrl(url)) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('Could not launch $url'),
+    ));
   }
 }
