@@ -114,9 +114,20 @@ class TicketsFragment extends StatelessWidget {
                                 )),
                           ],
                         ),
-                        trailing: Text(
-                          createdAt,
-                          style: const TextStyle(fontSize: 12),
+                        trailing: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              createdAt,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'Ticket no: ${tickets[index]?['ticketNo']}',
+                              style: const TextStyle(
+                                  fontSize: 12, color: Colors.grey),
+                            ),
+                          ],
                         ),
                       ),
                     );

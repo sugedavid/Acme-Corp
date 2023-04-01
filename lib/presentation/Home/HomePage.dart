@@ -14,13 +14,7 @@ class HomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user == null) {
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false)
-            .then((value) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Logged out successfully.'),
-          ));
-        });
+        Navigator.of(context).pushReplacementNamed('/login');
       }
     });
     var navIndex = ref.watch(navProvider);

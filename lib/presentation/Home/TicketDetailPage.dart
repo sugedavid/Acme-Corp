@@ -28,9 +28,14 @@ class TicketDetailPage extends ConsumerWidget {
     final messageController = TextEditingController();
 
     String userName = '';
+    String userType = '';
 
     getUserInfo(userId, 'name').then((String result) {
       userName = result;
+    });
+
+    getUserInfo(userId, 'userType').then((String result) {
+      userType = result;
     });
 
     var converstions = <dynamic>[];
@@ -113,9 +118,20 @@ class TicketDetailPage extends ConsumerWidget {
                             )),
                       ],
                     ),
-                    trailing: Text(
-                      createdAt,
-                      style: const TextStyle(fontSize: 12),
+                    trailing: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          createdAt,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Ticket no: ${ticketInfo['ticketNo']}',
+                          style:
+                              const TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -289,10 +305,11 @@ class TicketDetailPage extends ConsumerWidget {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 30),
                                   child: DropdownButton(
-                                    // isExpanded: true,
                                     value: ticketInfo['status'],
                                     icon: const Icon(Icons.keyboard_arrow_down),
-                                    items: transitions.map((String items) {
+                                    items: transitions(
+                                            ticketInfo['status'], userType)
+                                        .map((String items) {
                                       return DropdownMenuItem(
                                         value: items,
                                         child: Text(
@@ -346,7 +363,7 @@ class TicketDetailPage extends ConsumerWidget {
                                   ),
                                   const SizedBox(height: 2),
                                   Text(messageTime,
-                                      style: const TextStyle(fontSize: 8))
+                                      style: const TextStyle(fontSize: 10))
                                 ],
                               ),
                             );

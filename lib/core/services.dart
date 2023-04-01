@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
@@ -160,6 +161,7 @@ Future<void> createTicket(
   DatabaseReference ref = FirebaseDatabase.instance.ref('tickets').push();
   await ref.set({
     'id': ref.key,
+    'ticketNo': '#${Random().nextInt(1000)}',
     'title': title,
     'description': description,
     'fileUrl': url,
@@ -318,10 +320,8 @@ Future<void> loginUser(
 // log user out
 void logOutUser(context) async {
   FirebaseAuth.instance.signOut().then((value) {
-    Navigator.of(context).pushReplacementNamed('/login').then((value) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Logged out successfully.'),
-      ));
-    });
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Logged out successfully.'),
+    ));
   });
 }

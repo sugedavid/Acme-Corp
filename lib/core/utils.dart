@@ -85,14 +85,63 @@ final List<Map<dynamic, dynamic>> customerItems = [
 ];
 
 // List of transitions
-var transitions = [
-  'OPEN',
-  'IN-PROGRESS',
-  'BLOCKED',
-  'RESOLVED',
-  'RE-OPENED',
-  'CLOSED',
-];
+List<String> transitions(status, userType) {
+  if (userType == 'Customer') {
+    return [
+      'OPEN',
+      'RESOLVED',
+      'RE-OPENED',
+    ];
+  } else {
+    switch (status) {
+      case 'OPEN':
+        return [
+          'OPEN',
+          'IN-PROGRESS',
+          'BLOCKED',
+          'CLOSED',
+        ];
+      case 'IN-PROGRESS':
+        return [
+          'IN-PROGRESS',
+          'BLOCKED',
+          'CLOSED',
+        ];
+      case 'RESOLVED':
+        return [
+          'RESOLVED',
+          'RE-OPENED',
+        ];
+      case 'RE-OPENED':
+        return [
+          'IN-PROGRESS',
+          'BLOCKED',
+          'RESOLVED',
+          'RE-OPENED',
+          'CLOSED',
+        ];
+      case 'BLOCKED':
+        return [
+          'BLOCKED',
+          'RE-OPENED',
+        ];
+      case 'CLOSED':
+        return [
+          'CLOSED',
+          'RE-OPENED',
+        ];
+      default:
+        return [
+          'OPEN',
+          'IN-PROGRESS',
+          'BLOCKED',
+          'RESOLVED',
+          'RE-OPENED',
+          'CLOSED',
+        ];
+    }
+  }
+}
 
 Color? statusColor(status) {
   switch (status) {
