@@ -20,9 +20,6 @@ void main() {
       });
 
       test('transitions should return correctly', () {
-        // customer options
-        expect(transitions('OPEN', 'Customer').length, 3);
-
         // agent options
         expect(transitions('OPEN', 'Agent').length, 4);
         expect(transitions('IN-PROGRESS', 'Agent').length, 3);

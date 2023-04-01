@@ -86,11 +86,14 @@ final List<Map<dynamic, dynamic>> customerItems = [
 
 // List of transitions
 List<String> transitions(status, userType) {
-  if (userType == 'Customer') {
+  if (status.isEmpty || userType.isEmpty) {
     return [
       'OPEN',
+      'IN-PROGRESS',
+      'BLOCKED',
       'RESOLVED',
       'RE-OPENED',
+      'CLOSED',
     ];
   } else {
     switch (status) {
