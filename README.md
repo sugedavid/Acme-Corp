@@ -11,7 +11,7 @@ A Flutter(web, android and iOS) project.
 
 ## Getting Started
 
-- To run the project using Visual Studion code add the following launch configuration:
+- To run the project using Visual Studio Code, add the following launch configuration:
 
 ```
 {
