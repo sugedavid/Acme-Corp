@@ -16,131 +16,133 @@ class TicketDrawerMenu extends ConsumerWidget {
 
     var ticketInfo = ref.watch(ticketProvider);
 
-    return StreamBuilder<Object>(
-        stream: FirebaseDatabase.instance.ref('users').onValue,
-        builder: (context, snapshot) {
-          // loading
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-                child: LoadingAnimationWidget.beat(
-              color: lightColorScheme.primary,
-              size: 18,
-            ));
-          }
-
-          if (snapshot.hasData &&
-              snapshot.data != null &&
-              (snapshot.data! as DatabaseEvent).snapshot.value != null) {
-            var usersSnapshot = Map<dynamic, dynamic>.from(
-                (snapshot.data! as DatabaseEvent).snapshot.value
-                    as Map<dynamic, dynamic>);
-
-            users.clear();
-            usersSnapshot.forEach((key, value) {
-              if (value['userType'] == ticketInfo['userType']) {
-                users.add(value);
-              }
-            });
-
-            if (users.isEmpty) {
+    return SafeArea(
+      child: StreamBuilder<Object>(
+          stream: FirebaseDatabase.instance.ref('users').onValue,
+          builder: (context, snapshot) {
+            // loading
+            if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                child: Text('No ${ticketInfo['userType']}s'),
-              );
+                  child: LoadingAnimationWidget.beat(
+                color: lightColorScheme.primary,
+                size: 18,
+              ));
             }
 
-            return ListView(padding: const EdgeInsets.all(8.0), children: [
-              // title
-              Text(
-                '${ticketInfo['userType']}s',
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
+            if (snapshot.hasData &&
+                snapshot.data != null &&
+                (snapshot.data! as DatabaseEvent).snapshot.value != null) {
+              var usersSnapshot = Map<dynamic, dynamic>.from(
+                  (snapshot.data! as DatabaseEvent).snapshot.value
+                      as Map<dynamic, dynamic>);
 
-              // users
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: users.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 10),
+              users.clear();
+              usersSnapshot.forEach((key, value) {
+                if (value['userType'] == ticketInfo['userType']) {
+                  users.add(value);
+                }
+              });
 
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.account_circle_outlined,
-                            size: 24,
-                          ),
-                          const SizedBox(width: 10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                users[index]['name'] ?? 'No name',
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                users[index]['email'] ?? 'No email',
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      // assign agent
-                      Row(
-                        children: [
-                          TextButton(
-                              onPressed: () {
-                                ticketInfo['userType'] == 'Customer'
-                                    ? assignCustomer(
-                                        context,
-                                        ticketInfo['ticketId'],
-                                        users[index]['userId'])
-                                    : assignAgent(
-                                        context,
-                                        ticketInfo['ticketId'],
-                                        users[index]['userId']);
-                              },
-                              child: const Text(
-                                'Assign',
-                                style: TextStyle(fontSize: 12),
-                              )),
-                          const SizedBox(width: 2),
-                          TextButton(
-                              onPressed: (ticketInfo['userType'] == 'Agent')
-                                  ? null
-                                  : () {
-                                      showUpdateCustomer(
-                                          context, ticketInfo['customer']);
-                                    },
-                              child: const Text(
-                                'Edit',
-                                style: TextStyle(fontSize: 12),
-                              )),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                    ],
-                  );
-                },
-              )
-              // agents
-            ]);
-          }
+              if (users.isEmpty) {
+                return Center(
+                  child: Text('No ${ticketInfo['userType']}s'),
+                );
+              }
 
-          return const Center(
-            child: Text('No users'),
-          );
+              return ListView(padding: const EdgeInsets.all(8.0), children: [
+                // title
+                Text(
+                  '${ticketInfo['userType']}s',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
 
-          // error
-          // if (snapshot.hasError) {
-          //   return const Center(child: Text('Error loading users'));
-          // }
+                // users
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: users.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 10),
 
-          // return Container();
-        });
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.account_circle_outlined,
+                              size: 24,
+                            ),
+                            const SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  users[index]['name'] ?? 'No name',
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  users[index]['email'] ?? 'No email',
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        // assign agent
+                        Row(
+                          children: [
+                            TextButton(
+                                onPressed: () {
+                                  ticketInfo['userType'] == 'Customer'
+                                      ? assignCustomer(
+                                          context,
+                                          ticketInfo['ticketId'],
+                                          users[index]['userId'])
+                                      : assignAgent(
+                                          context,
+                                          ticketInfo['ticketId'],
+                                          users[index]['userId']);
+                                },
+                                child: const Text(
+                                  'Assign',
+                                  style: TextStyle(fontSize: 12),
+                                )),
+                            const SizedBox(width: 2),
+                            TextButton(
+                                onPressed: (ticketInfo['userType'] == 'Agent')
+                                    ? null
+                                    : () {
+                                        showUpdateCustomer(
+                                            context, ticketInfo['customer']);
+                                      },
+                                child: const Text(
+                                  'Edit',
+                                  style: TextStyle(fontSize: 12),
+                                )),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                    );
+                  },
+                )
+                // agents
+              ]);
+            }
+
+            return const Center(
+              child: Text('No users'),
+            );
+
+            // error
+            // if (snapshot.hasError) {
+            //   return const Center(child: Text('Error loading users'));
+            // }
+
+            // return Container();
+          }),
+    );
   }
 }

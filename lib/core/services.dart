@@ -292,10 +292,14 @@ Future<void> loginUser(
     )
         .then((value) {
       toggleVisibility();
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Logged in successfully.'),
-      ));
-      Navigator.pushNamed(context, '/home');
+
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false)
+          .then((value) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Logged in successfully.'),
+        ));
+      });
     });
   } on FirebaseAuthException catch (e) {
     toggleVisibility();

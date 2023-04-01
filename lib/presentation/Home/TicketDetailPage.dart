@@ -41,6 +41,7 @@ class TicketDetailPage extends ConsumerWidget {
     var converstions = <dynamic>[];
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 0,
         leading: IconButton(
@@ -218,111 +219,99 @@ class TicketDetailPage extends ConsumerWidget {
                               // view uploaded file
                               if (ticketInfo['fileUrl'] != null &&
                                   ticketInfo['fileUrl'] != '')
-                                Flexible(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5),
-                                    child: TextButton(
-                                        onPressed: () => openFileUrl(
-                                            context, ticketInfo['fileUrl']),
-                                        child: const Text(
-                                          'View file',
-                                          style: TextStyle(fontSize: 12),
-                                        )),
-                                  ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  child: TextButton(
+                                      onPressed: () => openFileUrl(
+                                          context, ticketInfo['fileUrl']),
+                                      child: const Text(
+                                        'View file',
+                                        style: TextStyle(fontSize: 12),
+                                      )),
                                 ),
 
                               //create customer
 
-                              Flexible(
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
-                                  child: TextButton(
-                                      onPressed: () =>
-                                          showCreateCustomer(context),
-                                      child: const Text(
-                                        'Create customer',
-                                        style: TextStyle(fontSize: 12),
-                                      )),
-                                ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                child: TextButton(
+                                    onPressed: () =>
+                                        showCreateCustomer(context),
+                                    child: const Text(
+                                      'Create customer',
+                                      style: TextStyle(fontSize: 12),
+                                    )),
                               ),
 
                               //assign customer
 
-                              Flexible(
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
-                                  child: TextButton(
-                                      onPressed: () {
-                                        ref
-                                            .read(ticketProvider.notifier)
-                                            .state = {
-                                          'userType': 'Customer',
-                                          'ticketId': ticketInfo['id'],
-                                          'customer': ticketInfo['customer']
-                                        };
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                child: TextButton(
+                                    onPressed: () {
+                                      ref.read(ticketProvider.notifier).state =
+                                          {
+                                        'userType': 'Customer',
+                                        'ticketId': ticketInfo['id'],
+                                        'customer': ticketInfo['customer']
+                                      };
 
-                                        Scaffold.of(context).openEndDrawer();
-                                      },
-                                      child: const Text(
-                                        'Assign customer',
-                                        style: TextStyle(fontSize: 12),
-                                      )),
-                                ),
+                                      Scaffold.of(context).openEndDrawer();
+                                    },
+                                    child: const Text(
+                                      'Assign customer',
+                                      style: TextStyle(fontSize: 12),
+                                    )),
                               ),
 
                               //assign agent
-                              Flexible(
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
-                                  child: TextButton(
-                                      onPressed: () {
-                                        ref
-                                            .read(ticketProvider.notifier)
-                                            .state = {
-                                          'userType': 'Agent',
-                                          'ticketId': ticketInfo['id'],
-                                          'customer': ticketInfo['customer']
-                                        };
-                                        Scaffold.of(context).openEndDrawer();
-                                      },
-                                      child: const Text(
-                                        'Assign agent',
-                                        style: TextStyle(fontSize: 12),
-                                      )),
-                                ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                child: TextButton(
+                                    onPressed: () {
+                                      ref.read(ticketProvider.notifier).state =
+                                          {
+                                        'userType': 'Agent',
+                                        'ticketId': ticketInfo['id'],
+                                        'customer': ticketInfo['customer']
+                                      };
+                                      Scaffold.of(context).openEndDrawer();
+                                    },
+                                    child: const Text(
+                                      'Assign agent',
+                                      style: TextStyle(fontSize: 12),
+                                    )),
                               ),
                             },
 
                             // transistion
                             Align(
                               alignment: Alignment.centerRight,
-                              child: Flexible(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 30),
-                                  child: DropdownButton(
-                                    value: ticketInfo['status'],
-                                    icon: const Icon(Icons.keyboard_arrow_down),
-                                    items: transitions(
-                                            ticketInfo['status'], userType)
-                                        .map((String items) {
-                                      return DropdownMenuItem(
-                                        value: items,
-                                        child: Text(
-                                          items,
-                                          style: const TextStyle(fontSize: 12),
-                                        ),
-                                      );
-                                    }).toList(),
-                                    onChanged: (value) {
-                                      transitionTicket(
-                                          context, ticketInfo['id'], value);
-                                    },
-                                  ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 30),
+                                child: DropdownButton(
+                                  value: ticketInfo['status'],
+                                  icon: const Icon(Icons.keyboard_arrow_down),
+                                  items: transitions(
+                                          ticketInfo['status'], userType)
+                                      .map((String items) {
+                                    return DropdownMenuItem(
+                                      value: items,
+                                      child: Text(
+                                        items,
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    transitionTicket(
+                                        context, ticketInfo['id'], value);
+                                  },
                                 ),
                               ),
                             ),

@@ -64,30 +64,28 @@ class DrawerMenu extends ConsumerWidget {
             ),
 
             // drawer items
-            Expanded(
-              child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: navStateItems.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    leading: navStateItems[index]['icon'],
-                    title: navStateItems[index]['title'],
-                    selected: index == navIndex,
-                    onTap: () {
-                      if (index != navStateItems.length - 1) {
-                        ref.read(navProvider.notifier).state = index;
-                      }
-                      if (index == navStateItems.length - 1) {
-                        logOutUser(context);
-                      }
-                      if (screenWidth < breakpoint) {
-                        Navigator.pop(context);
-                      }
-                    },
-                  );
-                },
-              ),
+            ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: navStateItems.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  leading: navStateItems[index]['icon'],
+                  title: navStateItems[index]['title'],
+                  selected: index == navIndex,
+                  onTap: () {
+                    if (index != navStateItems.length - 1) {
+                      ref.read(navProvider.notifier).state = index;
+                    }
+                    if (index == navStateItems.length - 1) {
+                      logOutUser(context);
+                    }
+                    if (screenWidth < breakpoint) {
+                      Navigator.pop(context);
+                    }
+                  },
+                );
+              },
             ),
           ]);
         });
