@@ -325,14 +325,29 @@ class TicketDetailPage extends ConsumerWidget {
                           shrinkWrap: true,
                           itemCount: converstions.length,
                           itemBuilder: (BuildContext context, int index) {
+                            String messageTime =
+                                converstions[index]?['time'] != null
+                                    ? DateFormat.MMMEd().add_jm().format(
+                                        DateTime.parse(
+                                            converstions[index]?['time']))
+                                    : '';
+
                             return ListTile(
                               title: Text(
                                 converstions[index]?['senderName'] ?? '',
                                 style: const TextStyle(fontSize: 12),
                               ),
-                              subtitle: Text(
-                                converstions[index]?['message'] ?? '',
-                                style: const TextStyle(fontSize: 12),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    converstions[index]?['message'] ?? '',
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(messageTime,
+                                      style: const TextStyle(fontSize: 8))
+                                ],
                               ),
                             );
                           },

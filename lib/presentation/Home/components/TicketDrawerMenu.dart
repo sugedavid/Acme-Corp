@@ -1,5 +1,6 @@
 import 'package:acme_corp/core/services.dart';
 import 'package:acme_corp/core/utils.dart';
+import 'package:acme_corp/presentation/Home/components/UpdateUserForm.dart';
 import 'package:acme_corp/presentation/shared/color_schemes.g.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -89,20 +90,38 @@ class TicketDrawerMenu extends ConsumerWidget {
                       ),
                       const SizedBox(height: 10),
                       // assign agent
-                      ElevatedButton(
-                          onPressed: () {
-                            ticketInfo['userType'] == 'Agent'
-                                ? assignAgent(context, ticketInfo['ticketId'],
-                                    users[index]['userId'])
-                                : assignCustomer(
-                                    context,
-                                    ticketInfo['ticketId'],
-                                    users[index]['userId']);
-                          },
-                          child: const Text(
-                            'Assign',
-                            style: TextStyle(fontSize: 12),
-                          )),
+                      Row(
+                        children: [
+                          TextButton(
+                              onPressed: () {
+                                ticketInfo['userType'] == 'Customer'
+                                    ? assignAgent(
+                                        context,
+                                        ticketInfo['ticketId'],
+                                        users[index]['userId'])
+                                    : assignCustomer(
+                                        context,
+                                        ticketInfo['ticketId'],
+                                        users[index]['userId']);
+                              },
+                              child: const Text(
+                                'Assign',
+                                style: TextStyle(fontSize: 12),
+                              )),
+                          const SizedBox(width: 2),
+                          TextButton(
+                              onPressed: (ticketInfo['userType'] == 'Agent')
+                                  ? null
+                                  : () {
+                                      showUpdateCustomer(
+                                          context, ticketInfo['customer']);
+                                    },
+                              child: const Text(
+                                'Edit',
+                                style: TextStyle(fontSize: 12),
+                              )),
+                        ],
+                      ),
                       const SizedBox(height: 10),
                     ],
                   );

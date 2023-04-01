@@ -1,3 +1,6 @@
+import 'package:acme_corp/domain/strings.dart';
+import 'package:acme_corp/presentation/Home/components/DashboardFragment.dart';
+import 'package:acme_corp/presentation/Home/components/TicketsFragment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -5,6 +8,11 @@ import 'package:url_launcher/url_launcher.dart';
 // navigation state
 final navProvider = StateProvider<int>((ref) {
   return 0;
+});
+
+// navigation state
+final navItemsProvider = StateProvider<dynamic>((ref) {
+  return customerItems;
 });
 
 // ticket state
@@ -23,6 +31,7 @@ final List<Map<dynamic, dynamic>> navItems = [
       Icons.dashboard_outlined,
       size: 18,
     ),
+    'widget': const DashboardFragment(),
   },
   {
     'title': const Text(
@@ -33,6 +42,7 @@ final List<Map<dynamic, dynamic>> navItems = [
       Icons.assignment_outlined,
       size: 18,
     ),
+    'widget': const TicketsFragment(),
   },
   {
     'title': const Text(
@@ -44,6 +54,7 @@ final List<Map<dynamic, dynamic>> navItems = [
       color: Colors.red.withOpacity(0.7),
       size: 18,
     ),
+    'widget': const Center(child: Text('Welcome to $appName')),
   }
 ];
 
@@ -57,6 +68,7 @@ final List<Map<dynamic, dynamic>> customerItems = [
       Icons.assignment_outlined,
       size: 18,
     ),
+    'widget': const TicketsFragment(),
   },
   {
     'title': const Text(
@@ -68,6 +80,7 @@ final List<Map<dynamic, dynamic>> customerItems = [
       color: Colors.red.withOpacity(0.7),
       size: 18,
     ),
+    'widget': const Center(child: Text('Welcome to $appName')),
   }
 ];
 

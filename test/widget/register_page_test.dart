@@ -25,5 +25,23 @@ void main() {
       expect(find.text('REGISTER'), findsOneWidget);
       expect(find.byType(RegisterForm), findsOneWidget);
     });
+
+    testWidgets('should pop registration page', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: RegisterPage(),
+        ),
+      );
+
+      await tester.drag(
+          find.text('Please fill in the details below to register.'),
+          const Offset(0.0, -600));
+      await tester.pump();
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(TextButton));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(RegisterPage), findsNothing);
+    });
   });
 }
