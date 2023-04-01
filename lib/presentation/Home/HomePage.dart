@@ -1,9 +1,7 @@
 import 'package:acme_corp/core/utils.dart';
 import 'package:acme_corp/domain/strings.dart';
 import 'package:acme_corp/presentation/Home/components/CreateTicketForm.dart';
-import 'package:acme_corp/presentation/Home/components/DashboardFragment.dart';
 import 'package:acme_corp/presentation/Home/components/DrawerMenu.dart';
-import 'package:acme_corp/presentation/Home/components/TicketsFragment.dart';
 import 'package:acme_corp/presentation/shared/color_schemes.g.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,15 +15,16 @@ class HomePage extends ConsumerWidget {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user == null) {
         Navigator.of(context)
-            .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+            .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false)
+            .then((value) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Logged out successfully.'),
+          ));
+        });
       }
     });
     var navIndex = ref.watch(navProvider);
-
-    final fragmentPages = <Widget>[
-      const DashboardFragment(),
-      const TicketsFragment(),
-    ];
+    var navStateItems = ref.watch(navItemsProvider);
 
     final screenWidth = MediaQuery.of(context).size.width;
     const breakpoint = 600.0;
@@ -51,7 +50,7 @@ class HomePage extends ConsumerWidget {
               child: DrawerMenu(),
             ),
             Container(width: 0.4, color: Colors.grey),
-            Expanded(child: fragmentPages[navIndex]),
+            Expanded(child: navStateItems[navIndex]['widget'] ?? Container()),
           ],
         ),
         floatingActionButton: FloatingActionButton.extended(
@@ -63,7 +62,7 @@ class HomePage extends ConsumerWidget {
       // mobile view
       return Scaffold(
         appBar: AppBar(elevation: 0, title: const Text(appName)),
-        body: fragmentPages[navIndex],
+        body: navStateItems[navIndex]['widget'] ?? Container(),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () => showCreateTicket(context),
           label: const Text('Create ticket'),

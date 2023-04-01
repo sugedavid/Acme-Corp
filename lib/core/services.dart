@@ -18,6 +18,7 @@ Future<void> sendMessage(
         'message': message,
         'senderId': senderId,
         'senderName': senderName,
+        'time': DateTime.now().toString(),
       })
       .then((_) {})
       .catchError((error) {
@@ -26,6 +27,25 @@ Future<void> sendMessage(
           content: Text(error),
         ));
       });
+}
+
+// update user profile
+Future<void> updateUserProfile(context, userId, name) async {
+  DatabaseReference ref = FirebaseDatabase.instance.ref('users/$userId');
+
+  await ref.update({
+    'name': name,
+  }).then((_) {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Customer updated successfully.'),
+    ));
+    Navigator.of(context).pop();
+  }).catchError((error) {
+    // The write failed...
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(error),
+    ));
+  });
 }
 
 // create customer profile
@@ -298,9 +318,10 @@ Future<void> loginUser(
 // log user out
 void logOutUser(context) async {
   FirebaseAuth.instance.signOut().then((value) {
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Logged out successfully.'),
-    ));
+    Navigator.of(context).pushReplacementNamed('/login').then((value) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Logged out successfully.'),
+      ));
+    });
   });
-  Navigator.of(context).pushReplacementNamed('/login');
 }
