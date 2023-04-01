@@ -29,3 +29,13 @@
 
 ![State transition diagram](https://user-images.githubusercontent.com/63927686/229278836-c5a419ce-21e8-4341-979c-98dbebd97cc5.png)
 
+---
+
+### Wireframe Drawings
+
+![Tickets](https://user-images.githubusercontent.com/63927686/229294684-85c4584c-7fcd-4ad2-aa94-5b5bb9e5c84e.png)
+
+![Ticket Info](https://user-images.githubusercontent.com/63927686/229294689-8d8ed322-ef04-4c39-971f-8309115e189a.png)
+
+
+
