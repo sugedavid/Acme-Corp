@@ -1,6 +1,6 @@
 ## User Stories
 
-- As a customer, I want to:
+#### As a customer, I want to:
 
 1. Log a new request with a title, description, and category, and optionally add attachments.
 2. Receive an email or notification acknowledging that my request has been logged.
@@ -9,7 +9,7 @@
 5. Resolve a request if I am satisfied with the solution provided by the agent.
 6. Re-open a request if I am not satisfied with the solution provided by the agent.
 
-- As an agent, I want to:
+#### As an agent, I want to:
 
 1. Receive customer requests.
 2. Log each request against the customer's profile with a ticket number, title, description, and category.
@@ -23,6 +23,9 @@
 
 ![Use case diagram](https://user-images.githubusercontent.com/63927686/229278504-1ce55f75-6d64-40f8-8789-9072ad96dc55.png)
 
+---
+
 ### State Transition Diagram
 
-![State transition diagram](https://user-images.githubusercontent.com/63927686/229278526-9f1983db-f52c-4015-8dc5-828a82a79df0.png)
+![State transition diagram](https://user-images.githubusercontent.com/63927686/229278836-c5a419ce-21e8-4341-979c-98dbebd97cc5.png)
+
