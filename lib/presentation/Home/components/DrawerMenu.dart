@@ -19,14 +19,6 @@ class DrawerMenu extends ConsumerWidget {
     String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
     Map userInfo = <dynamic, dynamic>{};
 
-    String userType = '';
-
-    getUserInfo(userId, 'userType').then((String result) {
-      userType = result;
-      ref.read(navItemsProvider.notifier).state =
-          userType == 'Agent' ? navItems : customerItems;
-    });
-
     return StreamBuilder<Object>(
         stream: FirebaseDatabase.instance.ref('users/$userId').onValue,
         builder: (context, snapshot) {

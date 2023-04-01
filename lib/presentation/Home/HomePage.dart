@@ -1,3 +1,4 @@
+import 'package:acme_corp/core/services.dart';
 import 'package:acme_corp/core/utils.dart';
 import 'package:acme_corp/domain/strings.dart';
 import 'package:acme_corp/presentation/Home/components/CreateTicketForm.dart';
@@ -19,6 +20,14 @@ class HomePage extends ConsumerWidget {
     });
     var navIndex = ref.watch(navProvider);
     var navStateItems = ref.watch(navItemsProvider);
+
+    String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+    String userType = '';
+    getUserInfo(userId, 'userType').then((String result) {
+      userType = result;
+      ref.read(navItemsProvider.notifier).state =
+          userType == 'Agent' ? navItems : customerItems;
+    });
 
     final screenWidth = MediaQuery.of(context).size.width;
     const breakpoint = 600.0;
