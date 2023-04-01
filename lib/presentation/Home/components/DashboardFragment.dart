@@ -86,42 +86,51 @@ class _DashboardFragmentState extends State<DashboardFragment> {
               });
             }
             return ListView(shrinkWrap: true, children: [
-              // pie chat
-              SizedBox(
-                height: 300,
-                child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: PieChart(PieChartData(
-                        centerSpaceRadius: 5,
-                        borderData: FlBorderData(show: false),
-                        sectionsSpace: 2,
-                        sections: [
-                          PieChartSectionData(
-                              value: open.length.toDouble(),
-                              color: statusColor('OPEN'),
-                              radius: 100),
-                          PieChartSectionData(
-                              value: inProgress.length.toDouble(),
-                              color: statusColor('IN-PROGRESS'),
-                              radius: 100),
-                          PieChartSectionData(
-                              value: blocked.length.toDouble(),
-                              color: statusColor('BLOCKED'),
-                              radius: 100),
-                          PieChartSectionData(
-                              value: resolved.length.toDouble(),
-                              color: statusColor('RESOLVED'),
-                              radius: 100),
-                          PieChartSectionData(
-                              value: reopened.length.toDouble(),
-                              color: statusColor('RE-OPENED'),
-                              radius: 100),
-                          PieChartSectionData(
-                              value: closed.length.toDouble(),
-                              color: statusColor('CLOSED'),
-                              radius: 100),
-                        ]))),
-              ),
+              if (tickets.isNotEmpty) ...{
+                // pie chat
+                SizedBox(
+                  height: 300,
+                  child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: PieChart(PieChartData(
+                          centerSpaceRadius: 5,
+                          borderData: FlBorderData(show: false),
+                          sectionsSpace: 2,
+                          sections: [
+                            PieChartSectionData(
+                                value: open.length.toDouble(),
+                                color: statusColor('OPEN'),
+                                radius: 100),
+                            PieChartSectionData(
+                                value: inProgress.length.toDouble(),
+                                color: statusColor('IN-PROGRESS'),
+                                radius: 100),
+                            PieChartSectionData(
+                                value: blocked.length.toDouble(),
+                                color: statusColor('BLOCKED'),
+                                radius: 100),
+                            PieChartSectionData(
+                                value: resolved.length.toDouble(),
+                                color: statusColor('RESOLVED'),
+                                radius: 100),
+                            PieChartSectionData(
+                                value: reopened.length.toDouble(),
+                                color: statusColor('RE-OPENED'),
+                                radius: 100),
+                            PieChartSectionData(
+                                value: closed.length.toDouble(),
+                                color: statusColor('CLOSED'),
+                                radius: 100),
+                          ]))),
+                )
+              } else ...{
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Text('No data'),
+                  ),
+                ),
+              },
 
               // tickets
               Card(

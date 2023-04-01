@@ -95,11 +95,11 @@ class TicketDrawerMenu extends ConsumerWidget {
                           TextButton(
                               onPressed: () {
                                 ticketInfo['userType'] == 'Customer'
-                                    ? assignAgent(
+                                    ? assignCustomer(
                                         context,
                                         ticketInfo['ticketId'],
                                         users[index]['userId'])
-                                    : assignCustomer(
+                                    : assignAgent(
                                         context,
                                         ticketInfo['ticketId'],
                                         users[index]['userId']);

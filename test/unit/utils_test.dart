@@ -20,9 +20,16 @@ void main() {
       });
 
       test('transitions should return correctly', () {
-        final items = transitions;
+        // customer options
+        expect(transitions('OPEN', 'Customer').length, 3);
 
-        expect(items.length, 6);
+        // agent options
+        expect(transitions('OPEN', 'Agent').length, 4);
+        expect(transitions('IN-PROGRESS', 'Agent').length, 3);
+        expect(transitions('BLOCKED', 'Agent').length, 2);
+        expect(transitions('RESOLVED', 'Agent').length, 2);
+        expect(transitions('RE-OPENED', 'Agent').length, 5);
+        expect(transitions('CLOSED', 'Agent').length, 2);
       });
 
       test('statusColor should return correctly', () {
