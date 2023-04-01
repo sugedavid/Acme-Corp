@@ -21,8 +21,8 @@
 
 ### Use Case Diagram
 
-[Use-case-diagram](https://firebase.google.com/docs)
+![Use case diagram](https://user-images.githubusercontent.com/63927686/229278504-1ce55f75-6d64-40f8-8789-9072ad96dc55.png)
 
 ### State Transition Diagram
 
-[State-transition-diagram](https://firebase.google.com/docs)
+![State transition diagram](https://user-images.githubusercontent.com/63927686/229278526-9f1983db-f52c-4015-8dc5-828a82a79df0.png)
