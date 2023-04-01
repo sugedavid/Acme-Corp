@@ -5,17 +5,34 @@ import 'package:acme_corp/presentation/Login/LoginPage.dart';
 import 'package:acme_corp/presentation/Register/RegisterPage.dart';
 import 'package:acme_corp/presentation/shared/color_schemes.g.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:io' show Platform;
 
 import 'domain/strings.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } else {
+    if (Platform.isAndroid) {
+      // Android-specific code
+      await Firebase.initializeApp(
+        name: appName,
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+    } else {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+    }
+  }
+
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -33,20 +50,7 @@ class MyApp extends StatelessWidget {
         colorScheme: lightColorScheme,
         textTheme: GoogleFonts.nunitoTextTheme(),
       ),
-      // darkTheme: ThemeData(
-      //   useMaterial3: true,
-      //   colorScheme: darkColorScheme,
-      //   textTheme: GoogleFonts.nunitoTextTheme(),
-      // ),
-      // theme: ThemeData(
-      //   useMaterial3: true,
-      //   colorScheme: ColorScheme.fromSwatch().copyWith(
-      //     primary: AppColors.primaryColor,
-      //     secondary: AppColors.primaryColorAccent,
-      //   ),
-      //   textTheme: GoogleFonts.nunitoTextTheme(),
-      // ),
-      home: const LoginPage(),
+      home: const HomePage(),
       routes: <String, WidgetBuilder>{
         '/login': (BuildContext context) => const LoginPage(),
         '/register': (BuildContext context) => const RegisterPage(),
