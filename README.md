@@ -6,7 +6,7 @@ A Flutter(web, android and iOS) project.
 
 ### Use Cases
 
-[View Use Cases]([lib/docs/use-cases.md](https://github.com/sugedavid/Acme-Corp/blob/master/lib/docs/use-cases.md%20))
+[View use cases](lib/docs/use-cases.md%20)
 
 
 ## Getting Started
