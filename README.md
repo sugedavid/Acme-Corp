@@ -1,16 +1,86 @@
-# acme_corp
+# Acme Corp
 
-A new Flutter project.
+A Flutter(web, android and iOS) project.
+
+---
+
+### Use Cases
+
+[View Use Cases](lib/docs/use-cases.md)
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+- To run the project using Visual Studion code add the following launch configuration:
 
-A few resources to get you started if this is your first Flutter project:
+```
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "acme_corp",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "acme_corp (profile mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "acme_corp (release mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    }
+  ]
+}
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Tools Used
+
+1. [Firebase](https://firebase.google.com/docs)
+   - Authentication - email and password
+   - Realtime Database
+   - Storage
+2. [Riverpod - State Management](https://riverpod.dev/docs/getting_started)
+3. [fl_chart - Chart Dashboard](https://pub.dev/packages/fl_chart)
+4. [Github Actions - CI/CD](https://docs.github.com/en/actions)
+
+---
+
+## Screenshots
+
+### Login
+
+![login]()
+
+### Register
+
+![register]()
+
+### Dashboard
+
+![dashboard]()
+
+### Tickets
+
+![tickets]()
+
+### Create Ticket
+
+![create-ticket]()
+
+### Ticket Info
+
+![ticket-info]()
+
+### Assign Agent
+
+![assign-agent]()
+
+### Assign Customer
+
+![assign-customer]()
