@@ -1,0 +1,73 @@
+# Flutter/Dart specific
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+build/
+.dart_tool/
+.pub/
+doc/api/
+doc/examples/
+ios/Flutter/Flutter.framework/
+
+# Xcode
+*.mode1v3
+*.mode2v3
+*.moved-aside
+*.pbxuser
+*.perspectivev3
+*.xcworkspace
+*.xcuserdatad
+*/*.gcno
+*.xccheckout
+
+# Android
+**/gradle-wrapper.jar
+**/gradle-wrapper.properties
+**/local.properties
+**/gradle/
+**/local.properties
+**/proguard/
+**/build/
+
+# Web
+web/flutter_service_worker.js
+web/packages/flutter_gallery/
+web/packages/flutter_gallery/test/
+web/packages/flutter_test/
+web/packages/flutter_test/test/
+web/packages/flutter_test/test/
+web/packages/flutter_test/test/
+
+# IDE - VSCode
+.vscode/
+*.code-workspace
+
+# IDE - Android Studio
+.idea/
+.gradle/
+build/
+.idea
+
+# iOS specific
+**/firebase_app_id_file.json
+
+# macOS specific
+.DS_Store
+# Thumbnails
+._*
+
+# Exclude sensitive files containing secrets or API keys
+secrets.yaml
+secrets.json
+*.key
+*.pem
+
+# Firebase-specific sensitive files
+# Add other Firebase-specific files or directories here
+# For example, to ignore Firebase config files or service account keys:
+firebase-config.json
+serviceAccountKey.json
+
+# Flutter pubspec.lock
+pubspec.lock
